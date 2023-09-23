@@ -16,6 +16,18 @@
   }
 }
 
+/* chrome, safari, edge, opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
 }
@@ -48,5 +60,24 @@ body {
   }
   83.33% {
     opacity: 0.4;
+  }
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-2px);
+  }
+  40%,
+  80% {
+    transform: translateX(2px);
   }
 }
