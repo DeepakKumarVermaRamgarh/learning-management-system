@@ -53,8 +53,8 @@ export const sendJwtToken = (
     accessTokenOptions.secure = true;
   }
 
-  res.cookie("access_token", accessTokenOptions);
-  res.cookie("refresh_token", refreshTokenOptions);
+  res.cookie("access_token", accessToken, accessTokenOptions);
+  res.cookie("refresh_token", refreshToken, refreshTokenOptions);
 
   res.status(statusCode).json({
     success: true,

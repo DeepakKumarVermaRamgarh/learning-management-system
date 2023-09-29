@@ -1,7 +1,9 @@
+import { useActivationMutation } from "@/redux/features/auth/authApi";
 import { styles } from "../../../app/styles/style";
-import React, { FC, useState, useRef } from "react";
+import React, { FC, useState, useRef, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { VscWorkspaceTrusted } from "react-icons/vsc";
+import { useSelector } from "react-redux";
 
 type Props = {
   setRoute: (route: string) => void;
@@ -15,6 +17,26 @@ type VerifyNumber = {
 };
 
 const Verification: FC<Props> = ({ setRoute }) => {
+  const { token } = useSelector((state: any) => state.auth);
+  const [activation, { isSuccess, error, data, isLoading }] =
+    useActivationMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Account activated successfully");
+      setRoute("Login");
+    }
+    if (error) {
+      if ("data" in error) {
+        const errorData = error as any;
+        toast.error(errorData.data.message);
+        setInvalidError(true);
+      } else {
+        console.log("An error occured", error);
+      }
+    }
+  }, [isSuccess, error]);
+
   const [invalidError, setInvalidError] = useState<boolean>(false);
   const inputRefs = [
     useRef<HTMLInputElement>(null),
@@ -31,7 +53,16 @@ const Verification: FC<Props> = ({ setRoute }) => {
   });
 
   const varificationHandler = async () => {
-    console.log("testing");
+    const verificationNumber = Object.values(verifyNumber).join("");
+    if (verificationNumber.length !== 4) {
+      setInvalidError(true);
+      return;
+    }
+    console.log(token)
+    await activation({
+      activation_token: token,
+      activation_code: verificationNumber,
+    });
   };
 
   const handleInputChange = (index: number, value: string) => {
@@ -84,7 +115,7 @@ const Verification: FC<Props> = ({ setRoute }) => {
       <br />
       <br />
       <div className="w-full flex justify-center">
-        <button className={styles.button} onClick={verificationHandler}>
+        <button className={styles.button} onClick={varificationHandler}>
           Verify OTP
         </button>
       </div>

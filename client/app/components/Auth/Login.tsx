@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -10,9 +10,12 @@ import {
 } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { styles } from "../../../app/styles/style";
+import toast from "react-hot-toast";
+import { useLoginMutation } from "@/redux/features/auth/authApi";
 
 type Props = {
   setRoute: (route: string) => void;
+  setOpen: (open: boolean) => void;
 };
 
 const schema = Yup.object().shape({
@@ -24,14 +27,31 @@ const schema = Yup.object().shape({
     .required("Please enter your password!"),
 });
 
-const Login: FC<Props> = ({ setRoute }) => {
+const Login: FC<Props> = ({ setRoute, setOpen }) => {
+  const [login, { data, error, isLoading, isSuccess }] = useLoginMutation();
+
   const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setOpen(false);
+      toast.success("Login Successfully!");
+    }
+    if (error) {
+      if ("data" in error) {
+        const errorData = error as any;
+        toast.error(errorData.data.message);
+      } else {
+        console.log(error);
+      }
+    }
+  }, [isSuccess, error]);
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     validationSchema: schema,
     onSubmit: async ({ email, password }) => {
-      console.log(email, password);
+      await login({ email, password });
     },
   });
 
