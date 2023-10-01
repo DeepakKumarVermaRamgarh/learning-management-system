@@ -274,15 +274,9 @@ interface IUpdateUserInfo {
 
 export const updateUserInfo = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { name, email } = req.body as IUpdateUserInfo;
+    const { name } = req.body as IUpdateUserInfo;
     const userId = req.user?._id;
     const user = await User.findById(userId);
-    if (email && user) {
-      const isEmailExists = await User.findOne({ email });
-      if (isEmailExists)
-        return next(new ErrorHandler("Email already exists", 400));
-      user.email = email;
-    }
 
     if (name && user) {
       user.name = name;
@@ -332,7 +326,7 @@ export const updatePassword = catchAsyncErrors(
 
     user.password = newPassword;
 
-    await user?.save();
+    await user?.save({validateBeforeSave:true});
     await redis.set(req.user?._id, JSON.stringify(user));
 
     res.status(200).json({

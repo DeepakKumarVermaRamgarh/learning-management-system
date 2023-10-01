@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import NavItems from "../utils/NavItems";
 import ThemeSwitcher from "../utils/ThemeSwitcher";
 import { HiOutlineMenuAlt3, HiOutlineUserCircle } from "react-icons/hi";
@@ -11,8 +11,13 @@ import SignUp from "./Auth/SignUp";
 import Verification from "./Auth/Verification";
 import { useSelector } from "react-redux";
 import Image from "next/image";
-
 import avatar from "../../public/assets/avatar.png";
+import {
+  useLogoutQuery,
+  useSocialAuthMutation,
+} from "@/redux/features/auth/authApi";
+import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
 type Props = {
   open: boolean;
@@ -32,9 +37,32 @@ const Header: FC<Props> = ({
   open,
 }) => {
   const { user } = useSelector((state: any) => state.auth);
-
+  const { data } = useSession();
+  const [socialAuth, { isSuccess }] = useSocialAuthMutation();
   const [active, setActive] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
+  const [logout, setLogout] = useState(false);
+  const {} = useLogoutQuery(undefined, {
+    skip: !logout ? true : false,
+  });
+
+  useEffect(() => {
+    if (!user) {
+      if (data) {
+        socialAuth({
+          email: data?.user?.email,
+          name: data?.user?.name,
+          avatar: data?.user?.image,
+        });
+      }
+    }
+    if (!data && isSuccess) {
+      toast.success("Login Successfully");
+    }
+    if (!data) {
+      setLogout(true);
+    }
+  }, [data, user, isSuccess]);
 
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", () => {
@@ -53,8 +81,8 @@ const Header: FC<Props> = ({
       <div
         className={`${
           active
-            ? "dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed top-0 left-0 w-full h-[80px] z-50 border-b dark:border-[#ffffff1c] shadow-xl transition duration-500 "
-            : "w-full border-b dark:border-[#ffffff1c] h-[80px] z-50 dark:shadow "
+            ? "bg-white dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed top-0 left-0 w-full h-[80px] z-50 border-b dark:border-[#ffffff1c] shadow-xl transition duration-500 "
+            : "w-full border-b dark:border-[#ffffff1c] h-[80px] z-50 dark:shadow"
         }`}
       >
         <div className=" w-[95%] 800px:w-[92%] m-auto py-2 h-full">
@@ -83,9 +111,14 @@ const Header: FC<Props> = ({
               {user ? (
                 <Link href="/profile">
                   <Image
-                    src={user.avatar ? user.avatar : avatar}
+                    src={user.avatar ? user.avatar.url : avatar}
                     alt={user.name}
+                    width={30}
+                    height={30}
                     className="w-[30px] h-[30px] rounded-full cursor-pointer"
+                    style={{
+                      border: activeItem === 5 ? "2px solid #37a39a" : "none",
+                    }}
                   />
                 </Link>
               ) : (
