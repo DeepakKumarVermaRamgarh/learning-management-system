@@ -15,6 +15,7 @@ import { redis } from "../utils/redis";
 import cloudinary from "cloudinary";
 import {
   getAllUsersService,
+  getUserById,
   updateUserRoleService,
 } from "../services/user.service";
 
@@ -180,6 +181,12 @@ export const authorizeRole = (...roles: string[]) => {
 export const updateAccessToken = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     const refresh_token = req.cookies.refresh_token as string;
+
+    if (!refresh_token)
+      return next(
+        new ErrorHandler("Please login first to access this resource", 400)
+      );
+
     const decoded = jwt.verify(
       refresh_token,
       process.env.REFRESH_TOKEN as string
@@ -229,19 +236,24 @@ export const getUserInfo = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.user?._id;
 
-    // const user = await getUserById(userId);
-
-    const user = await User.findById(userId);
-
-    if (!user)
+    if (!userId)
       return next(
-        new ErrorHandler(`No user found with id ${req.user?._id}`, 400)
+        new ErrorHandler("Please login first to access this resource", 400)
       );
 
-    res.status(200).json({
-      success: true,
-      user,
-    });
+    await getUserById(userId, res, next);
+
+    // const user = await User.findById(userId);
+
+    // if (!user)
+    //   return next(
+    //     new ErrorHandler(`No user found with id ${req.user?._id}`, 400)
+    //   );
+
+    // res.status(200).json({
+    //   success: true,
+    //   user,
+    // });
   }
 );
 
@@ -326,7 +338,7 @@ export const updatePassword = catchAsyncErrors(
 
     user.password = newPassword;
 
-    await user?.save({validateBeforeSave:true});
+    await user?.save({ validateBeforeSave: true });
     await redis.set(req.user?._id, JSON.stringify(user));
 
     res.status(200).json({

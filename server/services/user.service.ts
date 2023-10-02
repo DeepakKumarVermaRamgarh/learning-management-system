@@ -4,16 +4,22 @@ import User from "../models/user.model";
 import ErrorHandler from "../utils/ErrorHandler";
 
 // get user by id
-export const getUserById = async (id: string, res: Response) => {
+export const getUserById = async (
+  id: string,
+  res: Response,
+  next: NextFunction
+) => {
   const userJson = await redis.get(id);
 
   if (userJson) {
     const user = JSON.parse(userJson);
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       user,
     });
   }
+
+  return next(new ErrorHandler(`Please login first`, 400));
 };
 
 // get all users -- admin

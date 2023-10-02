@@ -62,10 +62,10 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
 
   return (
     <>
-      <div className="w-full flex justify-center">
+      <div className="w-full flex justify-center items-center">
         <div className="relative">
           <Image
-            src={avatar ? user.avatar.url || avatar : avatarIcon}
+            src={user.avatar || avatar ? user.avatar.url || avatar : avatarIcon}
             alt="avatar"
             className="w-[120px] h-[120px] cursor-pointer border-[3px] border-[#37a39a] rounded-full "
             width={120}
@@ -91,7 +91,10 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
       <br />
       <br />
       <div className="w-full pl-6 800px:pl-10">
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col items-center dark:text-white text-black"
+        >
           <div className="800px:w-1/2 m-auto block pb-4 ">
             <div className="w-full">
               <label className="block pb-2">Full Name :</label>
@@ -104,7 +107,7 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
               />
             </div>
             <div className="w-full pt-2">
-              <label className="block pb-2">Full Name :</label>
+              <label className="block pb-2">Your Email :</label>
               <input
                 type="email"
                 value={user?.email}
@@ -112,12 +115,12 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
                 readOnly
               />
             </div>
-            <input
-              type="submit"
-              value="Update"
-              className={`w-full 800px:w-[250px] h-[40px] border border-[#37a39a] text-center dark:text-white text-black rounded-[3px] mt-8 cursor-pointer`}
-            />
           </div>
+          <input
+            type="submit"
+            value="Update"
+            className={`w-full 800px:w-[250px] h-[40px] border border-[#37a39a] text-center dark:text-white text-black rounded-[3px] mt-8 cursor-pointer`}
+          />
         </form>
       </div>
     </>
