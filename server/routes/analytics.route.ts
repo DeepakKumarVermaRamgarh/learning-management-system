@@ -1,6 +1,9 @@
 import express from "express";
 import { isAuthenticated } from "../middlewares/auth";
-import { authorizeRole } from "../controllers/user.controller";
+import {
+  authorizeRole,
+  updateAccessToken,
+} from "../controllers/user.controller";
 import {
   getOrdersAnalytics,
   getUsersAnalytics,
@@ -10,6 +13,7 @@ const router = express.Router();
 
 router.get(
   "/get-users-analytics",
+  updateAccessToken,
   isAuthenticated,
   authorizeRole("admin"),
   getUsersAnalytics
@@ -17,6 +21,7 @@ router.get(
 
 router.get(
   "/get-courses-analytics",
+  updateAccessToken,
   isAuthenticated,
   authorizeRole("admin"),
   getCourseByUser
@@ -24,6 +29,7 @@ router.get(
 
 router.get(
   "/get-orders-analytics",
+  updateAccessToken,
   isAuthenticated,
   authorizeRole("admin"),
   getOrdersAnalytics

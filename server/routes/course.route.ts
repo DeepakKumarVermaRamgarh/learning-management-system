@@ -1,6 +1,9 @@
 import express from "express";
 import { isAuthenticated } from "../middlewares/auth";
-import { authorizeRole } from "../controllers/user.controller";
+import {
+  authorizeRole,
+  updateAccessToken,
+} from "../controllers/user.controller";
 import {
   addAnswer,
   addQuestion,
@@ -19,6 +22,7 @@ const router = express.Router();
 
 router.post(
   "/create-course",
+  updateAccessToken,
   isAuthenticated,
   authorizeRole("admin"),
   uploadCourse
@@ -37,14 +41,15 @@ router.get("/get-course-content/:id", isAuthenticated, getCourseByUser);
 
 router.get("/get-courses", getAllCourses);
 
-router.put("/add-question", isAuthenticated, addQuestion);
+router.put("/add-question", updateAccessToken, isAuthenticated, addQuestion);
 
-router.put("/add-answer", isAuthenticated, addAnswer);
+router.put("/add-answer", updateAccessToken, isAuthenticated, addAnswer);
 
-router.put("/add-review/:id", isAuthenticated, addReview);
+router.put("/add-review/:id", updateAccessToken, isAuthenticated, addReview);
 
 router.put(
   "/add-reply",
+  updateAccessToken,
   isAuthenticated,
   authorizeRole("admin"),
   addReplyToReview
@@ -52,6 +57,7 @@ router.put(
 
 router.get(
   "/get-all-courses",
+  updateAccessToken,
   isAuthenticated,
   authorizeRole("admin"),
   getCompleteCourses
@@ -59,6 +65,7 @@ router.get(
 
 router.delete(
   "/delete-course/:courseId",
+  updateAccessToken,
   isAuthenticated,
   authorizeRole("admin"),
   deleteCourse
