@@ -10,6 +10,7 @@ import ejs from "ejs";
 import { join } from "path";
 import sendMail from "../utils/sendMail";
 import Notification from "../models/notification.model";
+import axios from "axios";
 
 // upload course
 export const uploadCourse = catchAsyncErrors(
@@ -403,5 +404,24 @@ export const deleteCourse = catchAsyncErrors(
       success: true,
       message: "Course deleted successfully",
     });
+  }
+);
+
+// generate video url
+export const generateVideoUrl = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { videoId } = req.body;
+    const { data } = await axios.post(
+      `https://dev.vdociper.com/api/videos/${videoId}/otp`,
+      { ttl: 300 },
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Apisecret ${process.env.VDOCIPHER_API_SECRET}`,
+        },
+      }
+    );
+    res.status(200).json({ data });
   }
 );
