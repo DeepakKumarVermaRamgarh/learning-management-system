@@ -406,9 +406,9 @@ export const getAllUsers = catchAsyncErrors(
 // update user role -- only for admin
 export const updateUserRole = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { id, role } = req.body;
+    const { email, role } = req.body;
 
-    await updateUserRoleService(id, role, res, next);
+    await updateUserRoleService(email, role, res, next);
   }
 );
 

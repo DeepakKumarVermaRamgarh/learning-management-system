@@ -33,17 +33,18 @@ export const getAllUsersService = async (res: Response) => {
 
 // update user role -- admin
 export const updateUserRoleService = async (
-  id: string,
+  email: string,
   role: any,
   res: Response,
   next: NextFunction
 ) => {
-  const user = await User.findById(id);
-  if (!user) return next(new ErrorHandler(`No user found with id ${id}`, 400));
+  const user = await User.findById({ email });
+  if (!user)
+    return next(new ErrorHandler(`No user found with id ${email}`, 400));
 
   user.role = role;
 
-  await user.save();
+  await user.save({ validateModifiedOnly: true });
 
   res.status(200).json({
     success: true,

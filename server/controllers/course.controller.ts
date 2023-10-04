@@ -98,19 +98,19 @@ export const getSingleCourse = catchAsyncErrors(
 // get all courses -- without purchasing
 export const getAllCourses = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
-    const isCacheExists = await redis.get("allCourses");
+    // const isCacheExists = await redis.get("allCourses");
 
     let courses;
 
-    if (isCacheExists) {
-      courses = JSON.parse(isCacheExists);
-    } else {
-      courses = await Course.find().select(
-        "-courseData.videoUrl -courseData.suggestions -courseData.questions -courseData.links"
-      );
+    // if (isCacheExists) {
+    //   courses = JSON.parse(isCacheExists);
+    // } else {
+    courses = await Course.find().select(
+      "-courseData.videoUrl -courseData.suggestions -courseData.questions -courseData.links"
+    );
 
-      await redis.set("allCourses", JSON.stringify(courses));
-    }
+    // await redis.set("allCourses", JSON.stringify(courses));
+    // }
 
     res.status(200).json({
       success: true,
