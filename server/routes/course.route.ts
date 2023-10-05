@@ -30,6 +30,7 @@ router.post(
 
 router.put(
   "/edit-course/:courseId",
+  updateAccessToken,
   isAuthenticated,
   authorizeRole("admin"),
   editCourse
