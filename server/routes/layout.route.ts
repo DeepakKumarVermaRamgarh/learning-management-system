@@ -27,6 +27,6 @@ router.put(
   editLayout
 );
 
-router.get("/get-layout", getLayoutByType);
+router.get("/get-layout/:type", getLayoutByType);
 
 export default router;

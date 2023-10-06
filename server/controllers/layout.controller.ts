@@ -16,17 +16,23 @@ export const createLayout = catchAsyncErrors(
     if (type === "Banner") {
       const { image, title, subTitle } = req.body;
 
+      if (!image)
+        return next(new ErrorHandler("Please provide banner image", 400));
+
       const cloud = await cloudinary.v2.uploader.upload(image, {
         folder: "layout",
       });
 
       const banner = {
-        image: {
-          public_id: cloud.public_id,
-          url: cloud.secure_url,
+        type: "Banner",
+        banner: {
+          image: {
+            public_id: cloud.public_id,
+            url: cloud.secure_url,
+          },
+          title,
+          subTitle,
         },
-        title,
-        subTitle,
       };
 
       await Layout.create(banner);
@@ -71,25 +77,39 @@ export const editLayout = catchAsyncErrors(
       const { image, title, subTitle } = req.body;
       const bannerData = await Layout.findOne({ type: "Banner" });
 
-      if (bannerData) {
-        await cloudinary.v2.uploader.destroy(bannerData.image.public_id);
+      if (!bannerData) {
+        return next(new ErrorHandler("Banner not found", 404));
       }
 
-      const cloud = await cloudinary.v2.uploader.upload(image, {
-        folder: "layout",
-      });
+      let public_id = "",
+        url = "";
+
+      if (!image.startsWith("https")) {
+        // delete old image
+        await cloudinary.v2.uploader.destroy(bannerData.banner.image.public_id);
+
+        const cloud = await cloudinary.v2.uploader.upload(image, {
+          folder: "layout",
+        });
+
+        public_id = cloud.public_id;
+        url = cloud.secure_url;
+      } else {
+        public_id = bannerData?.banner.image.public_id;
+        url = bannerData?.banner.image.url;
+      }
 
       const banner = {
         type: "Banner",
         image: {
-          public_id: cloud.public_id,
-          url: cloud.secure_url,
+          public_id,
+          url,
         },
         title,
         subTitle,
       };
 
-      await Layout.findByIdAndUpdate(bannerData?._id, banner);
+      await Layout.findByIdAndUpdate(bannerData?._id, { banner });
     } else if (type === "FAQ") {
       const { faq } = req.body;
 
@@ -137,7 +157,7 @@ export const editLayout = catchAsyncErrors(
 // get layout by type
 export const getLayoutByType = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
-    const layout = await Layout.findOne({ type: req.body.type });
+    const layout = await Layout.findOne({ type: req.params.type });
 
     res.status(200).json({
       success: true,

@@ -1,11 +1,15 @@
 import React, { FC, useState, useEffect } from "react";
+import axios from "axios";
 
 type Props = {
   videoUrl: string;
   title: string;
 };
 
-const CoursePlayer: FC<Props> = ({ videoUrl, title }) => {
+const CoursePlayer: FC<Props> = ({
+  videoUrl = "461f8bce79ccae5f5d820abf57612f44",
+  title,
+}) => {
   const [videoData, setVideoData] = useState({
     otp: "",
     playbackInfo: "",
