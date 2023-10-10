@@ -20,6 +20,7 @@ const CreateCourse: FC<Props> = () => {
   const [courseInfo, setCourseInfo] = useState({
     name: "",
     description: "",
+    categories: "",
     price: "",
     estimatedPrice: "",
     tags: "",
@@ -36,6 +37,7 @@ const CreateCourse: FC<Props> = () => {
       title: "",
       description: "",
       videoSection: "Untitled Section",
+      videoLength: "",
       links: [
         {
           title: "",
@@ -62,6 +64,7 @@ const CreateCourse: FC<Props> = () => {
         videoUrl: courseContent.videoUrl,
         title: courseContent.title,
         description: courseContent.description,
+        videoLength: courseContent.videoLength,
         videoSection: courseContent.videoSection,
         links: courseContent.links.map((link: any) => ({
           title: link.title,

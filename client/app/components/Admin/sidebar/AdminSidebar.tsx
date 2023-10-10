@@ -19,7 +19,6 @@ import {
   MdOutlineReceipt,
   MdPeopleOutline,
   MdQuiz,
-  MdSettings,
   MdVideoCall,
   MdWeb,
   MdWysiwyg,
@@ -279,13 +278,6 @@ const AdminSidebar: FC<Props> = () => {
               {" "}
               {!isCollapsed && "Extras"}{" "}
             </Typography>
-            <Item
-              title="Settings"
-              to="/admin/settings"
-              icon={<MdSettings />}
-              selected={selected}
-              setSelected={setSelected}
-            />
             <div onClick={logoutHandler}>
               <Item
                 title="Logout"

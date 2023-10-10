@@ -41,6 +41,7 @@ interface ICourseData extends Document {
 interface ICourse extends Document {
   name: string;
   description: string;
+  categories: string;
   price: number;
   estimatedPrice?: number;
   thumbnail: object;
@@ -79,7 +80,7 @@ const courseDataSchema = new mongoose.Schema<ICourseData>({
   title: String,
   description: String,
   videoUrl: String,
-  // videoThumbnail: Object,
+  videoThumbnail: Object,
   videoSection: String,
   videoLength: Number,
   videoPlayer: String,
@@ -95,6 +96,10 @@ const courseSchema = new mongoose.Schema<ICourse>(
       required: true,
     },
     description: {
+      type: String,
+      required: true,
+    },
+    categories: {
       type: String,
       required: true,
     },

@@ -18,8 +18,9 @@ const Item: FC<Props> = ({ title, to, icon, selected, setSelected }) => {
       icon={icon}
       onClick={() => setSelected(title)}
     >
-      <Typography className="!text-[16px] !font-Poppins">{title}</Typography>
-      <Link href={to} />
+      <Link href={to}>
+        <Typography className="!text-[16px] !font-Poppins">{title}</Typography>
+      </Link>
     </MenuItem>
   );
 };

@@ -1,5 +1,7 @@
 import { styles } from "@/app/styles/style";
-import React, { FC, useState } from "react";
+import { useGetHeroDataQuery } from "@/redux/features/layout/layoutApi";
+import React, { FC, useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 type Props = {
   courseInfo: any;
@@ -15,6 +17,22 @@ const CourseInformation: FC<Props> = ({
   setActive,
 }) => {
   const [dragging, setDragging] = useState(false);
+  const { data, error } = useGetHeroDataQuery("Categories");
+
+  const [categories, setCategories] = useState<any>([]);
+
+  useEffect(() => {
+    if (data) {
+      setCategories(data.layout.categories);
+    }
+
+    if (error) {
+      if ("data" in error) {
+        const errorData = error as any;
+        toast.error(errorData?.data?.message);
+      }
+    }
+  }, [data, error]);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -129,20 +147,42 @@ const CourseInformation: FC<Props> = ({
             />
           </div>
         </div>
-        <div className="mb-5">
-          <label htmlFor="tags" className={styles.label}>
-            Course Tags
-          </label>
-          <input
-            type="text"
-            name="tags"
-            id="tags"
-            value={courseInfo.tags}
-            onChange={handleChange}
-            placeholder="MERN, Next 13,Socket IO,Tailwind CSS,GraphQL,Docker"
-            className={styles.input}
-            required
-          />
+        <div className="w-full flex justify-between mb-5">
+          <div className="w-[45%]">
+            <label htmlFor="tags" className={styles.label}>
+              Course Tags
+            </label>
+            <input
+              type="text"
+              name="tags"
+              id="tags"
+              value={courseInfo.tags}
+              onChange={handleChange}
+              placeholder="MERN, Next 13,Socket IO,Tailwind CSS,GraphQL,Docker"
+              className={styles.input}
+              required
+            />
+          </div>
+          <div className="w-[45%]">
+            <label htmlFor="demoUrl" className={styles.label}>
+              Course Categories
+            </label>
+            <select
+              className={styles.input}
+              name="categories"
+              value={courseInfo.categories}
+              onChange={handleChange}
+            >
+              <option value="" disabled>
+                Select Category
+              </option>
+              {categories.map((category: any) => (
+                <option value={category.title} key={category._id}>
+                  {category.title}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="w-full flex justify-between mb-5">
           <div className="w-[45%]">
@@ -188,9 +228,7 @@ const CourseInformation: FC<Props> = ({
           />
           <label
             htmlFor="file"
-            className={`w-full min-h-[10vh] dark:border-white border-[#00000026] p-3 border flex items-center justify-center ${
-              dragging ? "bg-blue-500" : "bg-transparent"
-            }`}
+            className={`${dragging ? "bg-blue-500" : "bg-transparent"}`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -209,13 +247,11 @@ const CourseInformation: FC<Props> = ({
             )}{" "}
           </label>
         </div>
-        <div className="w-full flex items-center justify-end mb-10">
-          <input
-            type="submit"
-            value="Next"
-            className="w-full 800px:w-[180px] h-[40px] bg-[#37a39a] text-center text-white rounded mt-8 cursor-pointer"
-          />
-        </div>
+        <input
+          type="submit"
+          value="Next"
+          className="w-full 800px:w-[180px] h-[40px] bg-[#37a39a] text-center text-white rounded mt-8 cursor-pointer"
+        />
       </form>
     </div>
   );
