@@ -9,11 +9,32 @@ import ejs from "ejs";
 import { getAllOrdersService, newOrder } from "../services/order.service";
 import { join } from "path";
 import sendMail from "../utils/sendMail";
+import dotenv from "dotenv";
+import Stripe from "stripe";
+import { redis } from "../utils/redis";
+dotenv.config();
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+  apiVersion: "2023-08-16",
+  maxNetworkRetries: 1,
+  timeout: 10000,
+  telemetry: true,
+});
 
 // create order
 export const createOrder = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     const { courseId, payment_info } = req.body as IOrder;
+
+    if (payment_info) {
+      if ("id" in payment_info) {
+        const paymentIntent = await stripe.paymentIntents.retrieve(
+          payment_info.id as string
+        );
+
+        if (paymentIntent.status !== "succeeded")
+          return next(new ErrorHandler("Payment failed", 400));
+      }
+    }
 
     const user = await User.findById(req.user?._id);
 
@@ -65,6 +86,8 @@ export const createOrder = catchAsyncErrors(
 
     user?.courses.push(course?._id);
 
+    await redis.set(req.user?._id, JSON.stringify(user));
+
     await user?.save();
 
     await Notification.create({
@@ -85,5 +108,35 @@ export const createOrder = catchAsyncErrors(
 export const getAllOrders = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     await getAllOrdersService(res);
+  }
+);
+
+// send strip publisable key to client
+export const sendStripPublishableKey = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    res.status(200).json({
+      publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+    });
+  }
+);
+
+// new payment
+export const newPayment = catchAsyncErrors(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { amount } = req.body;
+    const myPayment = await stripe.paymentIntents.create({
+      amount,
+      customer: req.user?._id,
+      currency: "inr",
+      metadata: { company: "E-Learning" },
+      automatic_payment_methods: { enabled: true },
+      receipt_email: req.user?.email,
+      description: "E-Learning course purchase",
+    });
+
+    res.status(200).json({
+      success: true,
+      client_secret: myPayment.client_secret,
+    });
   }
 );
