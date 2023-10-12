@@ -25,7 +25,7 @@ type Props = {
   activeItem: number;
   route: string;
   setRoute: (route: string) => void;
-  setActiveItem: (index: number) => void;
+  setActiveItem?: (index: number) => void;
 };
 
 const Header: FC<Props> = ({
