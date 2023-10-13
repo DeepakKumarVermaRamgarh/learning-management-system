@@ -27,11 +27,11 @@ const CoursePlayer: FC<Props> = ({
   }, [videoUrl]);
 
   return (
-    <div className=" pt-[41%] relative">
+    <div className=" pt-[56.25%] relative overflow-hidden">
       {videoData.otp && videoData.playbackInfo !== "" && (
         <iframe
           src={`https://player.vdocipher.com/v2/?otp=${videoData.otp}&playbackInfo=${videoData.playbackInfo}&player=${process.env.NEXT_PLAYER_ID}`}
-          className=" border-none w-[90%] h-full absolute top-0 left-0 "
+          className=" border-none w-full h-full absolute top-0 left-0 "
           allowFullScreen={true}
           allow="encrypted-media"
         ></iframe>

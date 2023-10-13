@@ -3,9 +3,11 @@
 import CourseDetailsPage from "@/app/components/Course/CourseDetailsPage";
 import {} from "react";
 
-type Props = {};
+type Props = {
+  params: any;
+};
 
-const Page = ({ params }: any) => {
+const Page = ({ params }: Props) => {
   return (
     <div>
       <CourseDetailsPage id={params.id} />

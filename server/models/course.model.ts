@@ -56,38 +56,50 @@ interface ICourse extends Document {
   purchased: number;
 }
 
-const reviewSchema = new mongoose.Schema<IReview>({
-  user: Object,
-  rating: {
-    type: Number,
-    default: 0,
+const reviewSchema = new mongoose.Schema<IReview>(
+  {
+    user: Object,
+    rating: {
+      type: Number,
+      default: 0,
+    },
+    comment: String,
   },
-  comment: String,
-});
+  { timestamps: true }
+);
 
-const linkSchema = new mongoose.Schema<ILink>({
-  title: String,
-  url: String,
-});
+const linkSchema = new mongoose.Schema<ILink>(
+  {
+    title: String,
+    url: String,
+  },
+  { timestamps: true }
+);
 
-const commentSchema = new mongoose.Schema<IComment>({
-  user: Object,
-  comment: String,
-  commentReplies: [Object],
-});
+const commentSchema = new mongoose.Schema<IComment>(
+  {
+    user: Object,
+    comment: String,
+    commentReplies: [Object],
+  },
+  { timestamps: true }
+);
 
-const courseDataSchema = new mongoose.Schema<ICourseData>({
-  title: String,
-  description: String,
-  videoUrl: String,
-  videoThumbnail: Object,
-  videoSection: String,
-  videoLength: Number,
-  videoPlayer: String,
-  links: [linkSchema],
-  suggestion: String,
-  questions: [Object],
-});
+const courseDataSchema = new mongoose.Schema<ICourseData>(
+  {
+    title: String,
+    description: String,
+    videoUrl: String,
+    videoThumbnail: Object,
+    videoSection: String,
+    videoLength: Number,
+    videoPlayer: String,
+    links: [linkSchema],
+    suggestion: String,
+    questions: [commentSchema],
+  },
+  { timestamps: true }
+);
 
 const courseSchema = new mongoose.Schema<ICourse>(
   {
