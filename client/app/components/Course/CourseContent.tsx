@@ -50,6 +50,7 @@ const CourseContent = ({ courseId, user }: Props) => {
             setActiveVideo={setActiveVideo}
             user={user}
             refetch={refetch}
+            content={contentData}
           />
         </div>
         <div className="hidden 800px:block 800px:col-span-3">

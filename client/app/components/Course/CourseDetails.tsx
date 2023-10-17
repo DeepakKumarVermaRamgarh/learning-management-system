@@ -4,12 +4,14 @@ import Ratings from "@/app/utils/Ratings";
 import Link from "next/link";
 import { useState } from "react";
 import { IoCheckmarkDoneOutline, IoCloseOutline } from "react-icons/io5";
-import { useSelector } from "react-redux";
 import { format } from "timeago.js";
 import CourseContentList from "./CourseContentList";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckOutForm from "../Payment/CheckOutForm";
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+import Image from "next/image";
+import DefaultImage from "../../../public/assets/avatar.png";
+import { VscVerifiedFilled } from "react-icons/vsc";
 
 type Props = {
   courseData: any;
@@ -19,7 +21,7 @@ type Props = {
 
 const CourseDetails = ({ courseData, stripePromise, clientSecret }: Props) => {
   const { data: userData } = useLoadUserQuery(undefined, {});
-  const user = useData?.user;
+  const user = userData?.user;
   const [open, setOpen] = useState(false);
 
   const discountPercentage = (
@@ -148,11 +150,17 @@ const CourseDetails = ({ courseData, stripePromise, clientSecret }: Props) => {
                         <div key={index} className="w-full pb-4">
                           <div className="flex">
                             <div className="w-[50px] h-[50px]">
-                              <div className="w-[50px] h-[50px] bg-slate-600 rounded-[50px] flex items-center justify-center cursor-pointer">
-                                <h1 className="uppercase text-[18px] text-black dark:text-white">
-                                  {review.user.name.slice(0, 2)}
-                                </h1>
-                              </div>
+                              <Image
+                                src={
+                                  review.user.avatar
+                                    ? review.user.avatar.url
+                                    : DefaultImage
+                                }
+                                width={50}
+                                height={50}
+                                alt=""
+                                className="w-[50px] h-[50px] rounded-full object-cover"
+                              />
                             </div>
                             <div className="hidden 800px:block pl-2">
                               <div className="flex items-center">
@@ -175,6 +183,42 @@ const CourseDetails = ({ courseData, stripePromise, clientSecret }: Props) => {
                               <Ratings rating={review?.rating} />
                             </div>
                           </div>
+                          {review?.commentReplies.map(
+                            (reply: any, index: number) => (
+                              <div
+                                className="w-full flex 800px:ml-[16px] my-5 "
+                                key={index}
+                              >
+                                <div className="w-[50px] h-[50px]">
+                                  <Image
+                                    src={
+                                      reply.user.avatar
+                                        ? reply.user.avatar.url
+                                        : DefaultImage
+                                    }
+                                    width={50}
+                                    height={50}
+                                    alt=""
+                                    className="w-[50px] h-[50px] rounded-full object-cover"
+                                  />
+                                </div>
+                                <div className="pl-2 text-black dark:text-white ">
+                                  <div className="flex items-center">
+                                    <h5 className="text-[20px]">
+                                      {reply?.user.name}
+                                    </h5>{" "}
+                                    {reply.user.role === "admin" && (
+                                      <VscVerifiedFilled className="text-[#23b0e7] ml-2 font-[20px]" />
+                                    )}
+                                  </div>
+                                  <p>{reply.comment}</p>
+                                  <small className="text-[#000000b8] dark:text-[#ffffff83]">
+                                    {format(reply.createdAt)} •
+                                  </small>
+                                </div>
+                              </div>
+                            )
+                          )}
                         </div>
                       ))}
                 </div>

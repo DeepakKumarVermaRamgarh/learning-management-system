@@ -91,7 +91,9 @@ const CommentItem = ({
                 <div className="pl-3">
                   <div className="flex items-center">
                     <h5 className="text-[20px]">{reply?.user.name}</h5>{" "}
-                    <VscVerifiedFilled className="text-[#23b0e7] ml-2 font-[20px]" />
+                    {reply.user.role === "admin" && (
+                      <VscVerifiedFilled className="text-[#23b0e7] ml-2 font-[20px]" />
+                    )}
                   </div>
                   <p>{reply?.answer}</p>
                   <small className="dark:text-[#ffffff83] text-[#000000b8]">

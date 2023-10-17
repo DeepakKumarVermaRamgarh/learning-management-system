@@ -85,6 +85,15 @@ const commentSchema = new mongoose.Schema<IComment>(
   { timestamps: true }
 );
 
+const questionSchema = new mongoose.Schema<IQuestion>(
+  {
+    user: Object,
+    question: String,
+    questionReplies: [Object],
+  },
+  { timestamps: true }
+);
+
 const courseDataSchema = new mongoose.Schema<ICourseData>(
   {
     title: String,
@@ -96,7 +105,7 @@ const courseDataSchema = new mongoose.Schema<ICourseData>(
     videoPlayer: String,
     links: [linkSchema],
     suggestion: String,
-    questions: [commentSchema],
+    questions: [questionSchema],
   },
   { timestamps: true }
 );
