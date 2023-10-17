@@ -2,7 +2,7 @@ import { styles } from "@/app/styles/style";
 import CoursePlayer from "@/app/utils/CoursePlayer";
 import Ratings from "@/app/utils/Ratings";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, SetStateAction, Dispatch, useEffect } from "react";
 import { IoCheckmarkDoneOutline, IoCloseOutline } from "react-icons/io5";
 import { format } from "timeago.js";
 import CourseContentList from "./CourseContentList";
@@ -17,23 +17,42 @@ type Props = {
   courseData: any;
   stripePromise: any;
   clientSecret: string;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  setRoute: Dispatch<SetStateAction<string>>;
 };
 
-const CourseDetails = ({ courseData, stripePromise, clientSecret }: Props) => {
+const CourseDetails = ({
+  courseData,
+  stripePromise,
+  clientSecret,
+  setOpen: openAuthModel,
+  setRoute,
+}: Props) => {
   const { data: userData } = useLoadUserQuery(undefined, {});
-  const user = userData?.user;
+  const [user, setUser] = useState<any>();
   const [open, setOpen] = useState(false);
+  const [isPurchased, setIsPurchased] = useState(false);
+
+  useEffect(() => {
+    if (userData) setUser(userData.user);
+    if (user) {
+      setIsPurchased(
+        user.courses.find((course: any) => course._id === courseData._id)
+      );
+    }
+  }, [courseData._id, user, userData]);
 
   const discountPercentage = (
     ((courseData.estimatedPrice - courseData.price) * 100) /
     courseData.estimatedPrice
   ).toFixed(0);
 
-  const isPurchased =
-    user && user.courses?.find((course: any) => course._id === courseData._id);
-
   const handleOrder = (e: any) => {
-    setOpen(true);
+    if (user) setOpen(true);
+    else {
+      setRoute("Login");
+      openAuthModel(true);
+    }
   };
 
   return (

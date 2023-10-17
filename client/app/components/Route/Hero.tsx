@@ -1,14 +1,23 @@
 import { useGetHeroDataQuery } from "@/redux/features/layout/layoutApi";
 import Image from "next/image";
 import Link from "next/link";
-import React, { FC } from "react";
+import { FC, ChangeEvent, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import Loader from "../Loader/Loader";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
 const Hero: FC<Props> = () => {
   const { data, isLoading } = useGetHeroDataQuery("Banner", {});
+  const [search, setSearch] = useState<string>("");
+  const router = useRouter();
+
+  const handleSearch = () => {
+    if (search.trim().length !== 0) {
+      router.push(`/courses?title=${search}`);
+    }
+  };
 
   if (isLoading) return <Loader />;
 
@@ -40,9 +49,20 @@ const Hero: FC<Props> = () => {
             type="search"
             placeholder="Search Courses..."
             className="bg-transparent border dark:border-none dark:bg-[#575757] dark:placeholder:text-[#ffffffdd] rounded-[5px] p-2 w-full h-full outline-none text-[#0000004e] dark:text-[#ffffffe6] text-[20px] font-[500] font-Josefin"
+            value={search}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setSearch(e.target.value)
+            }
           />
           <div className="absolute flex items-center justify-center w-[50px] cursor-pointer h-[50px] right-0 top-0 bg-[#39c1f3] rounded-r-[5px]">
-            <BiSearch className="text-white" size={30} />
+            <BiSearch
+              className="text-white"
+              size={30}
+              onClick={() => {
+                search.trim().length === 0 ? null : handleSearch;
+              }}
+              disabled={search.trim().length === 0}
+            />
           </div>
         </div>
         <br />
