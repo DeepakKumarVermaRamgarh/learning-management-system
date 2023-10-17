@@ -311,7 +311,11 @@ const CourseDetails = ({
               <div className="w-full">
                 {stripePromise && clientSecret && (
                   <Elements stripe={stripePromise} options={{ clientSecret }}>
-                    <CheckOutForm setOpen={setOpen} courseData={courseData} />
+                    <CheckOutForm
+                      setOpen={setOpen}
+                      courseData={courseData}
+                      user={user}
+                    />
                   </Elements>
                 )}
               </div>

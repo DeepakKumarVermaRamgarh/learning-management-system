@@ -1,9 +1,8 @@
 import app from "./app";
+import { initSocketServer } from "./socketServer";
 import { connectDB } from "./utils/db";
 import cloudinary from "cloudinary";
-
-// connect to database
-connectDB();
+import http from "http";
 
 // cloudinary config
 cloudinary.v2.config({
@@ -19,9 +18,16 @@ process.on("unhandledRejection", (err: any) => {
   process.exit(1);
 });
 
+// http server
+const httpServer = http.createServer(app);
+
+initSocketServer(httpServer);
+
 // initializing server
-const server = app.listen(process.env.PORT, () => {
+const server = httpServer.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
+  // connect to database
+  connectDB();
 });
 
 // uncaught exception error
