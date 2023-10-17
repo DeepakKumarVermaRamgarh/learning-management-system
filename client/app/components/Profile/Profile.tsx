@@ -1,10 +1,13 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import SideBarProfile from "./SideBarProfile";
 import { useLogoutQuery } from "@/redux/features/auth/authApi";
 import { signOut } from "next-auth/react";
 import ProfileInfo from "./ProfileInfo";
 import ChangePassword from "./ChangePassword";
+import EnrolledCourses from "./EnrolledCourses";
+import { useGetCourseQuery } from "@/redux/features/courses/courseApi";
+import { useGetHeroDataQuery } from "@/redux/features/layout/layoutApi";
 
 type Props = {
   user: any;
@@ -19,6 +22,9 @@ const Profile: FC<Props> = ({ user }) => {
     skip: !logout ? true : false,
   });
 
+  const { data, isLoading } = useGetCourseQuery(undefined, {});
+  const [courses, setCourses] = useState<any[]>([]);
+
   const logoutHandler = async () => {
     setLogout(true);
     await signOut();
@@ -30,6 +36,12 @@ const Profile: FC<Props> = ({ user }) => {
       else setScroll(false);
     });
   }
+
+  useEffect(() => {
+    if (!isLoading && data) {
+      setCourses(data.courses.filter((course: any) => course._id === user._id));
+    }
+  }, [data, user._id]);
 
   return (
     <div className="w-[85%] flex mx-auto">
@@ -54,6 +66,11 @@ const Profile: FC<Props> = ({ user }) => {
       {active === 2 && (
         <div className="w-full h-full bg-transparent mt-[80px]">
           <ChangePassword />
+        </div>
+      )}
+      {active === 3 && (
+        <div className="w-full pl-7 px-2 800px:px-10 800px:pl-8">
+          <EnrolledCourses courses={courses} />
         </div>
       )}
     </div>

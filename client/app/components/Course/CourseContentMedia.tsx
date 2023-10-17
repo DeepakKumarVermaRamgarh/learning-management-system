@@ -347,7 +347,7 @@ const CourseContentMedia = ({
               answer={answer}
               setAnswer={setAnswer}
               handleAnswerSubmit={handleAnswerSubmit}
-              user={user}
+              questionId={questionId}
               setQuestionId={setQuestionId}
               answerCreationLoading={answerCreationLoading}
             />
@@ -474,7 +474,7 @@ const CourseContentMedia = ({
                     </span>
                   )}
 
-                  {isReviewReply && (
+                  {isReviewReply && reviewId === review._id && (
                     <div className="w-full flex relative dark:text-white text-black ">
                       <input
                         type="text"

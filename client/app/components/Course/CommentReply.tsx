@@ -7,9 +7,9 @@ type Props = {
   answer: string;
   setAnswer: Dispatch<SetStateAction<string>>;
   handleAnswerSubmit: () => void;
-  user: any;
   setQuestionId: Dispatch<SetStateAction<string>>;
   answerCreationLoading: boolean;
+  questionId: string;
 };
 
 const CommentReply = ({
@@ -18,7 +18,7 @@ const CommentReply = ({
   answer,
   setAnswer,
   handleAnswerSubmit,
-  user,
+  questionId,
   setQuestionId,
   answerCreationLoading,
 }: Props) => {
@@ -33,6 +33,7 @@ const CommentReply = ({
           setQuestionId={setQuestionId}
           handleAnswerSubmit={handleAnswerSubmit}
           answerCreationLoading={answerCreationLoading}
+          questionId={questionId}
         />
       ))}
     </div>

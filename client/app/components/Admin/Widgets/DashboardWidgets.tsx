@@ -4,6 +4,11 @@ import { Box, CircularProgress } from "@mui/material";
 import { BiBorderLeft } from "react-icons/bi";
 import { PiUsersFourLight } from "react-icons/pi";
 import AllInvoices from "../Order/AllInvoices";
+import { useEffect, useState } from "react";
+import {
+  useGetOrdersAnalyticsQuery,
+  useGetUsersAnalyticsQuery,
+} from "@/redux/features/analytics/analyticsApi";
 
 type Props = {
   open?: boolean;
@@ -38,6 +43,51 @@ const CircularProgressWithLabel = ({ open, value }: Props) => {
 };
 
 const DashboardWidgets = ({ open }: Props) => {
+  const [ordersComparePercentage, setOrdersComparePercentage] = useState<any>(
+    {}
+  );
+  const [usersComparePercentage, setUsersComparePercentage] = useState<any>({});
+
+  const { data: usersData, isLoading: usersLoading } =
+    useGetUsersAnalyticsQuery({});
+  const { data: ordersData, isLoading: ordersLoading } =
+    useGetOrdersAnalyticsQuery({});
+
+  useEffect(() => {
+    if (!usersLoading && usersData) {
+      const lastTwoMonths = usersData.users.last12Months.slice(-2);
+      const currentMonth = lastTwoMonths[1].count;
+      const previousMonth = lastTwoMonths[0].count;
+
+      const percentageChange = (
+        (currentMonth - previousMonth * 100) /
+        (previousMonth !== 0 ? previousMonth : 1)
+      ).toFixed(0);
+
+      setUsersComparePercentage({
+        currentMonth,
+        previousMonth,
+        percentageChange,
+      });
+    }
+    if (!ordersLoading && ordersData) {
+      const lastTwoMonths = usersData.users.last12Months.slice(-2);
+      const currentMonth = lastTwoMonths[1].count;
+      const previousMonth = lastTwoMonths[0].count;
+
+      const percentageChange = (
+        (currentMonth - previousMonth * 100) /
+        (previousMonth !== 0 ? previousMonth : 1)
+      ).toFixed(0);
+
+      setOrdersComparePercentage({
+        currentMonth,
+        previousMonth,
+        percentageChange,
+      });
+    }
+  }, [ordersData, ordersLoading, usersData, usersLoading]);
+
   return (
     <div className="mt-[30px] min-h-screen">
       <div className="grid grid-cols-[75%,25%]">
@@ -51,15 +101,21 @@ const DashboardWidgets = ({ open }: Props) => {
               <div>
                 <BiBorderLeft className="dark:text-white text-black text-[30px]" />
                 <h5 className="pt-2 font-Poppins dark:text-white text-black text-[20px]">
-                  120
+                  {ordersComparePercentage?.currentMonth}
                 </h5>
                 <h5 className="pt-2 font-Poppins dark:text-white text-black text-[20px] font-[400]">
                   Sales Obtained
                 </h5>
               </div>
             </div>
-            <CircularProgressWithLabel value={100} open={open} />
-            <h5 className="text-center pt-4">+120%</h5>
+            <CircularProgressWithLabel
+              value={ordersComparePercentage.percentChange > 0 ? 100 : 0}
+              open={open}
+            />
+            <h5 className="text-center pt-4">
+              {ordersComparePercentage?.percentChange > 0 ? "+" : ""}
+              {ordersComparePercentage?.percentChange}%
+            </h5>
           </div>
         </div>
 
@@ -68,15 +124,21 @@ const DashboardWidgets = ({ open }: Props) => {
             <div>
               <PiUsersFourLight className="dark:text-[#45cba0] text-black text-[30px]" />
               <h5 className="py-2 font-Poppins dark:text-white text-black text-[20px]">
-                450
+                {usersComparePercentage?.currentMonth}
               </h5>
               <h5 className="py-2 font-Poppins dark:text-[#45cba0] text-black text-[20px] font-[400]">
                 New Users
               </h5>
             </div>
           </div>
-          <CircularProgressWithLabel value={100} open={open} />
-          <h5 className="text-center pt-4">+150%</h5>
+          <CircularProgressWithLabel
+            value={usersComparePercentage.percentChange > 0 ? 100 : 0}
+            open={open}
+          />
+          <h5 className="text-center pt-4">
+            {usersComparePercentage?.percentChange > 0 ? "+" : ""}
+            {usersComparePercentage?.percentChange}%
+          </h5>
         </div>
       </div>
 

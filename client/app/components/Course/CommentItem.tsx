@@ -10,6 +10,7 @@ type Props = {
   answer: string;
   setAnswer: Dispatch<SetStateAction<string>>;
   handleAnswerSubmit: () => void;
+  questionId: string;
   setQuestionId: Dispatch<SetStateAction<string>>;
   answerCreationLoading: boolean;
 };
@@ -19,6 +20,7 @@ const CommentItem = ({
   answer,
   setAnswer,
   handleAnswerSubmit,
+  questionId,
   setQuestionId,
   answerCreationLoading,
 }: Props) => {
@@ -69,7 +71,7 @@ const CommentItem = ({
             {item.questionReplies.length}
           </span>
         </div>
-        {replyActive && (
+        {replyActive && questionId === item._id && (
           <>
             {item?.questionReplies.map((reply: any, index: number) => (
               <div
