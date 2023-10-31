@@ -14,8 +14,6 @@ const Page = (props: Props) => {
   const [activeItem, setActiveItem] = useState<number>(3);
   const [route, setRoute] = useState<string>("Login");
 
-  const { user } = useSelector((state: any) => state.auth);
-
   return (
     <div>
       <Heading

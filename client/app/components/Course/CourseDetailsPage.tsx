@@ -19,23 +19,22 @@ const CourseDetailsPage: FC<Props> = ({ id }) => {
   const [route, setRoute] = useState("Login");
   const [open, setOpen] = useState(false);
   const { data, isLoading } = useGetCourseDetailsQuery(id);
-  const { data: config } = useGetStripePublishableKeyQuery({});
+  const { data: config } = useGetStripePublishableKeyQuery(undefined);
   const [createPaymentIndent, { data: paymentIndentData }] =
     useCreatePaymentIndentMutation();
 
   const [stripePromise, setStripePromise] = useState<any>(null);
-  const [clientSecret, setClientSecret] = useState("");
+  const [clientSecret, setClientSecret] = useState<string>("");
 
   useEffect(() => {
     if (config) {
-      const publishableKey = config?.publishableKey;
-      setStripePromise(loadStripe(publishableKey));
+      setStripePromise(loadStripe(config.publishableKey));
     }
     if (data) {
       const amount = Math.round(data.course.price * 100);
       createPaymentIndent(amount);
     }
-  }, [config, createPaymentIndent, data]);
+  }, [config, data]);
 
   useEffect(() => {
     if (paymentIndentData) {

@@ -18,7 +18,7 @@ const CourseCard = ({ course, isProfile }: Props) => {
       <div className="w-full min-h-[35vh] dark:bg-slate-500 dark:bg-opacity-20 backdrop-blur border dark:border-[#ffffff1d] border-[#00000015] dark:shadow-[bg-slate-700] rounded-lg p-3 shadow-sm dark:shadow-inner ">
         <Image
           src={course.thumbnail.url}
-          alt={course.name}
+          alt={`Thumbnail of ${course.name}`}
           width={500}
           height={300}
           objectFit="contain"
@@ -35,11 +35,11 @@ const CourseCard = ({ course, isProfile }: Props) => {
               isProfile && "hidden 800px:inline"
             } `}
           >
-            {course.purchased} Students
+            &nbsp; {course.purchased} Students
           </h5>
         </div>
 
-        <div className="w-full flex items-center justify-between pt-3">
+        <div className="w-full flex items-center justify-between pt-3 dark:text-white text-black">
           <div className="flex">
             <h3>{course.price === 0 ? "Free" : "Rs." + course.price}</h3>
             <h5 className="pl-3 text-[14px] mt-[-5px] line-through opacity-80 text-black dark:text-white ">

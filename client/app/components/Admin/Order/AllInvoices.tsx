@@ -48,7 +48,7 @@ const AllInvoices = ({ isDashboard }: Props) => {
     ...(isDashboard
       ? []
       : [
-          { field: "useEmail", headerName: "Email", flex: 1 },
+          { field: "userEmail", headerName: "Email", flex: 1 },
           { field: "title", headerName: "Course Title", flex: 1 },
         ]),
     { field: "price", headerName: "Price", flex: 0.5 },
@@ -56,8 +56,8 @@ const AllInvoices = ({ isDashboard }: Props) => {
       ? [{ field: "created_at", headerName: "Created At", flex: 0.5 }]
       : [
           {
-            field: "",
-            headerName: "Email",
+            field: "mail",
+            headerName: "Mail",
             flex: 0.2,
             rederCell: (params: any) => {
               return (
@@ -103,7 +103,7 @@ const AllInvoices = ({ isDashboard }: Props) => {
                 border: "none",
                 outline: "none",
               },
-              "& .css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon": {
+              "& .css-1iyq7zh-MuiDataGrid-columnHeaders": {
                 color: theme === "dark" ? "#fff" : "#000",
               },
               "& .MuiDataGrid-sortIcon": {

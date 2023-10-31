@@ -22,6 +22,7 @@ const Page = (props: Props) => {
   const [open, setOpen] = useState<boolean>(false);
   const [courses, setCourses] = useState<any[]>([]);
   const [category, setCategory] = useState<string>("All");
+  const [categories, setCategories] = useState<any>([]);
 
   useEffect(() => {
     if (category === "All") {
@@ -33,14 +34,13 @@ const Page = (props: Props) => {
     }
     if (search) {
       setCourses(
-        data?.coures.filter((course: any) =>
+        data?.courses.filter((course: any) =>
           course.name.toLowerCase().includes(search?.toLowerCase())
         )
       );
     }
-  }, [category, data?.coures, data?.courses, search]);
-
-  const categories = categoriesData?.layout.categories;
+    if (categoriesData) setCategories(categoriesData.layout.categories);
+  }, [category, data, search, categoriesData]);
 
   return (
     <div>
@@ -66,26 +66,23 @@ const Page = (props: Props) => {
               <div
                 className={`h-[35px] ${
                   category === "All" ? "bg-[crimson]" : "bg-[#5050cb]"
-                } m-3 px-3 rounded-[30px] flex items-center justify-center font-Poppins cursor-pointer `}
+                } m-3 px-3 rounded-[30px] flex items-center justify-center font-Poppins cursor-pointer text-white`}
                 onClick={() => setCategory("All")}
               >
                 All
               </div>
               {categories &&
-                categories.map((item: any, index: number) => {
-                  <div key={index}>
-                    <div
-                      className={`h-[35px] ${
-                        category === item.title
-                          ? "bg-[crimson]"
-                          : "bg-[#5050cb]"
-                      } m-3 px-3 rounded-[30px] flex items-center justify-center font-Poppins cursor-pointer `}
-                      onClick={() => setCategory(item.title)}
-                    >
-                      {item.title}
-                    </div>
-                  </div>;
-                })}
+                categories.map((item: any, index: number) => (
+                  <div
+                    key={index}
+                    className={`h-[35px] ${
+                      category === item.title ? "bg-[crimson]" : "bg-[#5050cb]"
+                    } m-3 px-3 rounded-[30px] flex items-center justify-center font-Poppins cursor-pointer text-white`}
+                    onClick={() => setCategory(item.title)}
+                  >
+                    {item.title}
+                  </div>
+                ))}
             </div>
             {courses && courses.length === 0 && (
               <p

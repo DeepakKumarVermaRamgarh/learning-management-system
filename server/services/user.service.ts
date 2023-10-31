@@ -38,7 +38,7 @@ export const updateUserRoleService = async (
   res: Response,
   next: NextFunction
 ) => {
-  const user = await User.findById({ email });
+  const user = await User.findOne({ email });
   if (!user)
     return next(new ErrorHandler(`No user found with id ${email}`, 400));
 

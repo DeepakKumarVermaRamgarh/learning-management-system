@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { AiOutlineDelete, AiOutlineMail } from "react-icons/ai";
 import { Box, Button, Modal } from "@mui/material";
@@ -63,24 +63,46 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
     }
   }, [isSuccess, deleteError, updateError, deleteSuccess, refetch]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!email || !role || email.trim() === "") {
+      toast.error("Invalid email or role");
+      return;
+    }
+    console.log(email, role);
     await updateUserRole({ email, role });
+    setOpen(false);
+    setEmail("");
+    setRole("");
   };
 
   const handleDelete = async () => {
     const id = userId;
     await deleteUser(id);
+    setOpen(false);
   };
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.3 },
     { field: "name", headerName: "Name", flex: 0.5 },
-    { field: "email", headerName: "Email", flex: 1 },
+    { field: "email", headerName: "Email", flex: 0.8 },
     { field: "role", headerName: "Role", flex: 0.5 },
-    { field: "courses", headerName: "Purchased Courses", flex: 0.5 },
+    { field: "courses", headerName: "Purchased", flex: 0.5 },
     { field: "created_at", headerName: "Joined At", flex: 0.5 },
     {
-      field: " ",
+      field: "",
+      headerName: "Email",
+      flex: 0.2,
+      renderCell: (params: any) => (
+        <>
+          <a href={`mailto:${params.row.email}`}>
+            <AiOutlineMail className="dark:text-white text-black" size={20} />
+          </a>
+        </>
+      ),
+    },
+    {
+      field: "delete",
       headerName: "Delete",
       flex: 0.2,
       renderCell: (params: any) => (
@@ -96,18 +118,6 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
         </>
       ),
     },
-    {
-      field: " ",
-      headerName: "Email",
-      flex: 0.2,
-      renderCell: (params: any) => (
-        <>
-          <a href={`mailto:${params.row.email}`}>
-            <AiOutlineMail className="dark:text-white text-black" size={20} />
-          </a>
-        </>
-      ),
-    },
   ];
 
   const rows: any = [];
@@ -116,7 +126,7 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
     const admins =
       data && data.users.filter((item: any) => item.role === "admin");
 
-    admins.forEach((item: any) => {
+    admins?.forEach((item: any) => {
       const { _id, name, email, courses, role, createdAt } = item;
       rows.push({
         id: _id,
@@ -167,7 +177,7 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
                 border: "none",
                 outline: "none",
               },
-              "& .css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon": {
+              "& .css-1iyq7zh-MuiDataGrid-columnHeaders": {
                 color: theme === "dark" ? "#fff" : "#000",
               },
               "& .MuiDataGrid-sortIcon": {
@@ -219,13 +229,16 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              <Box className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-5 flex flex-col">
+              <Box className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-5 flex flex-col bg-[#111c43] p-8 rounded">
                 <h1 className={styles.title}>Add New Member</h1>
-                <form className="flex flex-col" onSubmit={handleSubmit}>
+                <form
+                  className="flex flex-col gap-3 min-w-fit"
+                  onSubmit={handleSubmit}
+                >
                   <input
                     type="email"
                     inputMode="email"
-                    placeholder="User ID"
+                    placeholder="User Email"
                     className={styles.input}
                     value={email}
                     onChange={(e) => setEmail(e.target.value.trim())}
@@ -239,7 +252,9 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
                     <option value="admin">Admin</option>
                     <option value="user">User</option>
                   </select>
-                  <div className={`${styles.button}`}>Add Member</div>
+                  <button type="submit" className={`${styles.button}`}>
+                    Add Member
+                  </button>
                 </form>
               </Box>
             </Modal>
@@ -252,9 +267,9 @@ const AllUsers: FC<Props> = ({ isTeam }) => {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              <Box className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-5">
+              <Box className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-5 bg-[#111c43] p-8 rounded">
                 <h1 className={styles.title}>
-                  Are you sure you want to delete this user ?
+                  Are you sure to delete this user ?
                 </h1>
                 <div className="flex w-full items-center justify-between mb-6 mt-6 ">
                   <div

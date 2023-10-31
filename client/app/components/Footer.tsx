@@ -1,10 +1,11 @@
 import Link from "next/link";
+import { AiFillGithub, AiFillInstagram, AiFillYoutube } from "react-icons/ai";
 
 type Props = {};
 
 const Footer = (props: Props) => {
   return (
-    <footer>
+    <footer className="py-5">
       <div className="border border-[#0000000e] dark:border-[#ffffff1e] "></div>
       <br />
       <div className="w-[95%] 800px:w-full 800px:max-w-[85%] mx-auto px-2 sm:px-6 lg:px-8 ">
@@ -81,24 +82,39 @@ const Footer = (props: Props) => {
               <li>
                 <Link
                   href="https://www.youtube.com"
-                  className="text-base text-black  hover:text-orange-500 dark:text-gray-300 dark:hover:text-white "
+                  className="text-base text-black  hover:text-orange-500 dark:text-gray-300 dark:hover:text-white flex flex-row gap-2 items-center"
+                  rel="noopener noreferrer"
                 >
+                  <AiFillYoutube
+                    size={20}
+                    className="dark:text-white text-black"
+                  />
                   Youtube
                 </Link>
               </li>
               <li>
                 <Link
                   href="https://www.instagram.com"
-                  className="text-base text-black  hover:text-orange-500 dark:text-gray-300 dark:hover:text-white "
+                  className="text-base text-black  hover:text-orange-500 dark:text-gray-300 dark:hover:text-white flex flex-row gap-2 items-center "
+                  rel="noopener noreferrer"
                 >
+                  <AiFillInstagram
+                    size={20}
+                    className="dark:text-white text-black"
+                  />
                   Instagram
                 </Link>
               </li>
               <li>
                 <Link
                   href="https://www.github.com"
-                  className="text-base text-black  hover:text-orange-500 dark:text-gray-300 dark:hover:text-white "
+                  className="text-base text-black  hover:text-orange-500 dark:text-gray-300 dark:hover:text-white flex flex-row gap-2 items-center "
+                  rel="noopener noreferrer"
                 >
+                  <AiFillGithub
+                    size={20}
+                    className="dark:text-white text-black"
+                  />
                   GitHub
                 </Link>
               </li>
@@ -121,7 +137,7 @@ const Footer = (props: Props) => {
           </div>
         </div>
         <p className="text-center text-black dark:text-white">
-          Copyright &copy; {new Date().getFullYear()} E-Learning || All Rights
+          Copyright &copy; {new Date().getFullYear()} <span className="">E-Learning</span> || All Rights
           Reserved
         </p>
       </div>

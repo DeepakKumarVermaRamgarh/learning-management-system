@@ -24,9 +24,9 @@ const CommentReply = ({
 }: Props) => {
   return (
     <div className="w-full my-3">
-      {data[activeVideo]?.questions?.map((question: any, index: number) => (
+      {data[activeVideo]?.questions?.map((question: any) => (
         <CommentItem
-          key={index}
+          key={question._id}
           item={question}
           answer={answer}
           setAnswer={setAnswer}

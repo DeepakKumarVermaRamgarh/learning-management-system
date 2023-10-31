@@ -4,6 +4,7 @@ import React, {
   ChangeEvent,
   Dispatch,
   SetStateAction,
+  memo,
   useEffect,
   useState,
 } from "react";
@@ -212,7 +213,7 @@ const CourseContentMedia = ({
     data,
     error,
     isSuccess,
-    refetch,
+
     replyError,
     replySuccess,
     reviewError,
@@ -541,4 +542,4 @@ const CourseContentMedia = ({
   );
 };
 
-export default CourseContentMedia;
+export default memo(CourseContentMedia);

@@ -5,6 +5,7 @@ import { FC, ChangeEvent, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import Loader from "../Loader/Loader";
 import { useRouter } from "next/navigation";
+import DefaultImage from "../../../public/assets/banner-img.png";
 
 type Props = {};
 
@@ -26,7 +27,7 @@ const Hero: FC<Props> = () => {
       <div className="absolute top-[100px] 1000px:top-[unset] 1500px:h-[700px] 1500px:w-[700px] 1100px:h-[600px] 1100px:w-[600px] h-[40vh] left-5 w-[40vh] hero_animation rounded-[50%] 1100px:left-8 1500px:left-14 "></div>
       <div className="1000px:w-[40%] flex 1000px:min-h-screen items-center justify-end pt-[70px] 1000px:pt-[0] z-10 ">
         <Image
-          src={data?.layout?.banner?.image?.url}
+          src={data?.layout?.banner?.image?.url || DefaultImage}
           alt="banner-image"
           width={400}
           height={400}
@@ -58,9 +59,7 @@ const Hero: FC<Props> = () => {
             <BiSearch
               className="text-white"
               size={30}
-              onClick={() => {
-                search.trim().length === 0 ? null : handleSearch;
-              }}
+              onClick={handleSearch}
               disabled={search.trim().length === 0}
             />
           </div>

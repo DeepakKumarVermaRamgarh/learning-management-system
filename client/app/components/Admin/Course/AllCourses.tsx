@@ -5,7 +5,7 @@ import { FiEdit2 } from "react-icons/fi";
 import { Box, Button, Modal } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import {
-  useDelteCourseMutation,
+  useDeleteCourseMutation,
   useGetAllCoursesQuery,
 } from "@/redux/features/courses/courseApi";
 import Loader from "../../Loader/Loader";
@@ -18,22 +18,24 @@ type Props = {};
 
 const AllCourses: FC<Props> = () => {
   const { theme, setTheme } = useTheme();
-  const { data, isLoading, refetch } = useGetAllCoursesQuery(
-    {},
-    { refetchOnMountOrArgChange: true }
-  );
+  const {
+    data,
+    isLoading,
+    refetch,
+    error: courseFetchError,
+  } = useGetAllCoursesQuery(undefined, { refetchOnMountOrArgChange: true });
   const [open, setOpen] = useState(false);
   const [courseId, setCourseId] = useState("");
-  const [deleteCourse, { isSuccess, error }] = useDelteCourseMutation({});
+  const [deleteCourse, { isSuccess, error }] = useDeleteCourseMutation({});
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
     { field: "title", headerName: "Course Title", flex: 1 },
-    { field: "ratings", headerName: "Ratings", flex: 0.5 },
-    { field: "purchased", headerName: "Purchased", flex: 0.5 },
+    { field: "ratings", headerName: "Ratings", flex: 0.3 },
+    { field: "purchased", headerName: "Purchased", flex: 0.3 },
     { field: "created_at", headerName: "Created At", flex: 0.5 },
     {
-      field: "",
+      field: "edit",
       headerName: "Edit",
       flex: 0.2,
       renderCell: (params: any) => (
@@ -45,7 +47,7 @@ const AllCourses: FC<Props> = () => {
       ),
     },
     {
-      field: "",
+      field: "delete",
       headerName: "Delete",
       flex: 0.2,
       renderCell: (params: any) => (
@@ -94,11 +96,15 @@ const AllCourses: FC<Props> = () => {
       if ("data" in error) {
         const errorMessage = error as any;
         toast.error(errorMessage.data.message);
-      } else {
-        console.log(error);
       }
     }
-  }, [error, isSuccess, refetch]);
+    if (courseFetchError) {
+      if ("data" in courseFetchError) {
+        const errorMessage = courseFetchError as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+  }, [error, isSuccess, courseFetchError]);
 
   return (
     <div className="mt-[120px]">
@@ -114,7 +120,7 @@ const AllCourses: FC<Props> = () => {
                 border: "none",
                 outline: "none",
               },
-              "& .css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon": {
+              "& .css-1iyq7zh-MuiDataGrid-columnHeaders": {
                 color: theme === "dark" ? "#fff" : "#000",
               },
               "& .MuiDataGrid-sortIcon": {

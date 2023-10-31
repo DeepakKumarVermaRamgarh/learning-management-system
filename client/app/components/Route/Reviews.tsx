@@ -1,42 +1,11 @@
 import { styles } from "@/app/styles/style";
 import Image from "next/image";
 import ReviewCard from "../Review/ReviewCard";
+import DefaultImage from "../../../public/assets/avatar.png";
 
 type Props = {};
 
 export const reviews: any[] = [
-  {
-    name: "John Doe",
-    avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-    profession: "Web Developer",
-    comment:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem aperiam, unde eius reiciendis soluta at distinctio minima? Placeat id dolores modi velit dicta eos repellendus. Soluta aliquid est error nostrum iste placeat odio assumenda atque impedit possimus architecto natus eos voluptatibus tempora vitae ullam incidunt voluptas, ipsam, tempore maxime non.",
-    ratings: 4.5,
-  },
-  {
-    name: "John Doe",
-    avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-    profession: "Web Developer",
-    comment:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem aperiam, unde eius reiciendis soluta at distinctio minima? Placeat id dolores modi velit dicta eos repellendus. Soluta aliquid est error nostrum iste placeat odio assumenda atque impedit possimus architecto natus eos voluptatibus tempora vitae ullam incidunt voluptas, ipsam, tempore maxime non.",
-    ratings: 4.5,
-  },
-  {
-    name: "John Doe",
-    avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-    profession: "Web Developer",
-    comment:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem aperiam, unde eius reiciendis soluta at distinctio minima? Placeat id dolores modi velit dicta eos repellendus. Soluta aliquid est error nostrum iste placeat odio assumenda atque impedit possimus architecto natus eos voluptatibus tempora vitae ullam incidunt voluptas, ipsam, tempore maxime non.",
-    ratings: 4.5,
-  },
-  {
-    name: "John Doe",
-    avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-    profession: "Web Developer",
-    comment:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem aperiam, unde eius reiciendis soluta at distinctio minima? Placeat id dolores modi velit dicta eos repellendus. Soluta aliquid est error nostrum iste placeat odio assumenda atque impedit possimus architecto natus eos voluptatibus tempora vitae ullam incidunt voluptas, ipsam, tempore maxime non.",
-    ratings: 4.5,
-  },
   {
     name: "John Doe",
     avatar: "https://randomuser.me/api/portraits/men/1.jpg",
@@ -76,17 +45,13 @@ const Reviews = (props: Props) => {
     <div className="w-[90%] 800px:w-[85%] m-auto">
       <div className="w-full 800px:flex items-center mb-5">
         <div className="800px:w-[50%] w-full">
-          <Image
-            src={require("../public/images/avatar.png")}
-            alt="reviews"
-            width={700}
-            height={700}
-          />
+          <Image src={DefaultImage} alt="reviews" width={700} height={700} />
         </div>
 
         <div className="800px:w-[50%] w-full">
           <h3 className={`${styles.title} 800px:!text-[40px] `}>
-            Our Students Are <span className="text-gradient">Our Strength</span>
+            Our Students Are{" "}
+            <span className={styles.gradient}>Our Strength</span>
             <br />
             See What They Say About Us
           </h3>

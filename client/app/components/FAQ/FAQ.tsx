@@ -13,7 +13,7 @@ const FAQ = (props: Props) => {
 
   useEffect(() => {
     if (data) {
-      setQuestions(data.layout.faq);
+      setQuestions(data.layout?.faq);
     }
   }, [data]);
 
@@ -31,7 +31,7 @@ const FAQ = (props: Props) => {
 
       <div className="mt-12">
         <dl className="space-y-8 mb-8">
-          {questions.map((q: any) => (
+          {questions?.map((q: any) => (
             <div
               key={q._id}
               className={`${
@@ -42,6 +42,8 @@ const FAQ = (props: Props) => {
                 <button
                   className="flex items-start dark:text-white text-black justify-between w-full text-left focus:outline-none"
                   onClick={() => toggleQuestion(q._id)}
+                  aria-expanded={activeQuestion === q._id}
+                  aria-controls={`faq-answer-${q._id}`}
                 >
                   <span className="font-medium text-black dark:text-white">
                     {q.question}

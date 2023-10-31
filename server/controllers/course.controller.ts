@@ -5,7 +5,7 @@ import { catchAsyncErrors } from "../middlewares/catchAsyncErrors";
 import { createCourse, getAllCoursesService } from "../services/course.service";
 import { redis } from "../utils/redis";
 import ErrorHandler from "../utils/ErrorHandler";
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import ejs from "ejs";
 import { join } from "path";
 import sendMail from "../utils/sendMail";
@@ -16,6 +16,10 @@ import axios from "axios";
 export const uploadCourse = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
+
+    if (!data)
+      return next(new ErrorHandler("please fill required details.", 400));
+
     const thumbnail = data.thumbnail;
     if (thumbnail) {
       const cloud = await cloudinary.v2.uploader.upload(thumbnail, {
@@ -28,7 +32,9 @@ export const uploadCourse = catchAsyncErrors(
       };
     }
 
-    createCourse(data, res);
+    await redis.del("allCourses");
+
+    createCourse(data, res, next);
   }
 );
 
@@ -70,6 +76,8 @@ export const editCourse = catchAsyncErrors(
       { new: true }
     );
 
+    await redis.del("allCourses");
+
     res.status(200).json({
       success: true,
       message: "Course updated successfully",
@@ -107,19 +115,19 @@ export const getSingleCourse = catchAsyncErrors(
 // get all courses -- without purchasing
 export const getAllCourses = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
-    // const isCacheExists = await redis.get("allCourses");
+    const isCacheExists = await redis.get("allCourses");
 
     let courses;
 
-    // if (isCacheExists) {
-    //   courses = JSON.parse(isCacheExists);
-    // } else {
-    courses = await Course.find().select(
-      "-courseData.videoUrl -courseData.suggestions -courseData.questions -courseData.links"
-    );
+    if (isCacheExists) {
+      courses = JSON.parse(isCacheExists);
+    } else {
+      courses = await Course.find().select(
+        "-courseData.videoUrl -courseData.suggestions -courseData.questions -courseData.links"
+      );
 
-    // await redis.set("allCourses", JSON.stringify(courses));
-    // }
+      await redis.set("allCourses", JSON.stringify(courses));
+    }
 
     res.status(200).json({
       success: true,
@@ -140,7 +148,7 @@ export const getCourseByUser = catchAsyncErrors(
 
     if (!courseExists)
       return next(
-        new ErrorHandler("Your aren't eligible to access this resource", 404)
+        new ErrorHandler("You aren't eligible to access this resource", 404)
       );
 
     const course = await Course.findById(courseId);
@@ -309,7 +317,7 @@ export const addReview = catchAsyncErrors(
 
     if (!courseExists)
       return next(
-        new ErrorHandler("Your aren't eligible to access this resource", 404)
+        new ErrorHandler("You aren't eligible to access this resource", 404)
       );
 
     const course = await Course.findById(courseId);
@@ -404,7 +412,8 @@ export const addReplyToReview = catchAsyncErrors(
 // get all courses -- only for admin
 export const getCompleteCourses = catchAsyncErrors(
   async (req: Request, res: Response, next: NextFunction) => {
-    await getAllCoursesService(res);
+    console.log("here");
+    getAllCoursesService(req, res, next);
   }
 );
 

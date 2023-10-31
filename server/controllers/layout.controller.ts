@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import ErrorHandler from "../utils/ErrorHandler";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors";
-import Layout from "../models/layout.mode";
+import Layout from "../models/layout.model";
 import cloudinary from "cloudinary";
 
 // create layout

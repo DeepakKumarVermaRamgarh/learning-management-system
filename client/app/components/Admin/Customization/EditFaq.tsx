@@ -35,19 +35,15 @@ const EditFaq: FC<Props> = () => {
       if ("data" in error) {
         const errMsg = error as any;
         toast.error(errMsg.data.message);
-      } else {
-        console.log(error);
-      }
+      } 
     }
     if (editError) {
       if ("data" in editError) {
         const errMsg = editError as any;
         toast.error(errMsg.data.message);
-      } else {
-        console.log(error);
       }
     }
-  }, [data, editError, error, isSuccess, refetch]);
+  }, [data, editError, error, isSuccess]);
 
   const newFaqHandler = () => {
     setQuestions([...questions, { question: "", answer: "" }]);
@@ -162,13 +158,13 @@ const EditFaq: FC<Props> = () => {
         className={`${
           styles.button
         } !w-[100px] !min-h-[40px] !h-[40px] dark:text-white text-black bg-[#cccccc34] ${
-          areQuestionsUnchanged(data.layout.faq, questions) ||
+          areQuestionsUnchanged(data?.layout?.faq, questions) ||
           isAnyQuestionEmpty(questions)
             ? "!cursor-not-allowed"
             : "!cursor-pointer !bg-[#42d383]"
         } !rounded absolute bottom-12 right-12 `}
         onClick={
-          areQuestionsUnchanged(data.layout.faq, questions) ||
+          areQuestionsUnchanged(data?.layout?.faq, questions) ||
           isAnyQuestionEmpty(questions)
             ? () => null
             : handleEdit

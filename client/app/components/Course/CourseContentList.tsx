@@ -85,10 +85,10 @@ const CourseContentList = ({
               </div>
             </div>
             <h5 className="text-black dark:text-white mb-1">
-              {sectionVideoCount} Lessons
+              {sectionVideoCount} Lessons&nbsp;
               {sectionVideoLength < 60
-                ? sectionVideoLength + "minutes"
-                : sectionContentHours.toFixed(2) + "hours"}
+                ? sectionVideoLength + " minutes"
+                : sectionContentHours.toFixed(2) + " hours"}
             </h5>
 
             {isSectionVisible && (
@@ -121,8 +121,8 @@ const CourseContentList = ({
                       </div>
                       <h5 className="pl-8 text-black dark:text-white">
                         {item.videoLength < 60
-                          ? item.videoLength + "minutes"
-                          : contentLength.toFixed(2) + "hours"}
+                          ? item.videoLength + " minutes"
+                          : contentLength.toFixed(2) + " hours"}
                       </h5>
                     </div>
                   );

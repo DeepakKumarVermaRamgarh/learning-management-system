@@ -30,8 +30,8 @@ const CourseDetails = ({
 }: Props) => {
   const { data: userData } = useLoadUserQuery(undefined, {});
   const [user, setUser] = useState<any>();
-  const [open, setOpen] = useState(false);
-  const [isPurchased, setIsPurchased] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [isPurchased, setIsPurchased] = useState<boolean>(false);
 
   useEffect(() => {
     if (userData) setUser(userData.user);
@@ -56,7 +56,7 @@ const CourseDetails = ({
   };
 
   return (
-    <div>
+    <>
       <div className="w-[90%] 800px:w-[90%] m-auto py-5 ">
         <div className="w-full flex flex-col-reverse 800px:flex-row">
           <div className="w-full 800px:w-[65%] 800px:pr-5">
@@ -158,7 +158,8 @@ const CourseDetails = ({
                       {Number.isInteger(courseData?.ratings)
                         ? courseData?.ratings.toFixed(1)
                         : courseData?.ratings.toFixed(2)}
-                      Course Rating • {courseData?.reviews?.length} Reviews
+                      &nbsp;Course Rating • {courseData?.reviews?.length}{" "}
+                      Reviews
                     </h5>
                   </div>
                   <br />
@@ -299,7 +300,7 @@ const CourseDetails = ({
       <>
         {open && (
           <div className="w-full h-screen bg-[#00000036] fixed top-0 left-0 z-50 flex items-center justify-center">
-            <div className="w-[500px] max-h-[500px] bg-white rounded-xl shadow p-3">
+            <div className="w-[500px] bg-white rounded-xl shadow p-3">
               <div className="w-full flex justify-end">
                 <IoCloseOutline
                   size={40}
@@ -323,7 +324,7 @@ const CourseDetails = ({
           </div>
         )}
       </>
-    </div>
+    </>
   );
 };
 

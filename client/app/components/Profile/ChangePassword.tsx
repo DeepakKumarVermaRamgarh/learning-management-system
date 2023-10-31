@@ -48,8 +48,9 @@ const ChangePassword: FC<Props> = () => {
     }
     if (error) {
       if ("data" in error) {
-        toast.error(error?.data?.message);
-      } else console.log(error);
+        const errMsg = error as any;
+        toast.error(errMsg?.data?.message);
+      }
     }
   }, [isSuccess, error]);
 

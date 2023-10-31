@@ -44,29 +44,32 @@ const AdminSidebar: FC<Props> = () => {
   return (
     <Box
       sx={{
-        "& .pro-sidebar-inner": {
+        "& .ps-sidebar-container": {
           background: `${
             theme === "dark" ? "#111c43 !important" : "#fff !important"
           }`,
+          paddingBottom: "40px",
           "& .pro-icon-wrapper": {
             backgroundColor: "transparent !important",
           },
-          "& .pro-inner-item:hover": {
+          "& .ps-menuitem-root:hover": {
             color: "#868dfb !important",
           },
-          "& .pro-menu-item.active": {
+          "& .ps-menu-button:hover": {
+            color: "#868dfb !important",
+          },
+          "& .ps-menuitem-root.ps-active": {
             color: "#6870fa !important",
           },
           "& .pro-inner-item": {
             padding: "5px 35px 5px 20px !important",
             opacity: 1,
           },
-          "& .pro-menu-item": {
-            color: `${theme !== "dark" && "#000"}`,
+          "& .ps-menuitem-root": {
+            color: `${theme === "dark" ? "#fff" : "#000"}`,
           },
         },
       }}
-      className="!bg-white !dark:bg-[#111c43]"
     >
       <Sidebar
         collapsed={isCollapsed}
@@ -76,6 +79,7 @@ const AdminSidebar: FC<Props> = () => {
           left: 0,
           height: "100vh",
           width: isCollapsed ? "0%" : "16%",
+          zIndex: 1000,
         }}
       >
         <Menu>
@@ -132,7 +136,7 @@ const AdminSidebar: FC<Props> = () => {
                 <Typography
                   variant="h4"
                   sx={{ m: "10px 0 0 0" }}
-                  className="!text-[20px] text-black dark:text-[#ffffffc1] "
+                  className="!text-[20px] text-black dark:text-[#ffffffc1] capitalize"
                 >
                   - {user.role}
                 </Typography>
@@ -211,7 +215,7 @@ const AdminSidebar: FC<Props> = () => {
             />
             <Item
               title="FAQ"
-              to="/faq"
+              to="/admin/faq"
               icon={<MdQuiz />}
               selected={selected}
               setSelected={setSelected}

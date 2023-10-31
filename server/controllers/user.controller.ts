@@ -224,10 +224,6 @@ export const updateAccessToken = catchAsyncErrors(
 
     await redis.set(user._id, JSON.stringify(user), "EX", 60 * 60 * 24 * 7); // keep cache data for 7 days
 
-    // res.status(200).json({
-    //   success: true,
-    //   accessToken,
-    // });
     next();
   }
 );
@@ -243,18 +239,6 @@ export const getUserInfo = catchAsyncErrors(
       );
 
     await getUserById(userId, res, next);
-
-    // const user = await User.findById(userId);
-
-    // if (!user)
-    //   return next(
-    //     new ErrorHandler(`No user found with id ${req.user?._id}`, 400)
-    //   );
-
-    // res.status(200).json({
-    //   success: true,
-    //   user,
-    // });
   }
 );
 

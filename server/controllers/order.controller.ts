@@ -51,6 +51,8 @@ export const createOrder = catchAsyncErrors(
 
     if (!course) return next(new ErrorHandler("Course not found", 400));
 
+    if (course) course.purchased = course.purchased + 1;
+
     const data: any = {
       courseId: course._id,
       userId: user?._id,
@@ -96,8 +98,7 @@ export const createOrder = catchAsyncErrors(
       message: `You have a new order from ${course?.name}`,
     });
 
-    if (course) course.purchased += 1;
-
+    await redis.del("allCourses");
     await course.save();
 
     newOrder(data, res, next);
@@ -126,7 +127,6 @@ export const newPayment = catchAsyncErrors(
     const { amount } = req.body;
     const myPayment = await stripe.paymentIntents.create({
       amount,
-      customer: req.user?._id,
       currency: "inr",
       metadata: { company: "E-Learning" },
       automatic_payment_methods: { enabled: true },
@@ -134,7 +134,7 @@ export const newPayment = catchAsyncErrors(
       description: "E-Learning course purchase",
     });
 
-    res.status(200).json({
+    res.status(201).json({
       success: true,
       client_secret: myPayment.client_secret,
     });

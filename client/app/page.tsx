@@ -29,7 +29,6 @@ const Page: FC<Props> = (props) => {
         setOpen={setOpen}
         route={route}
         setRoute={setRoute}
-        setActiveItem={setActiveItem}
       />
       <Hero />
       <Courses />

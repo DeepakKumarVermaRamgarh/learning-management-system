@@ -29,7 +29,6 @@ type Props = {
 };
 
 const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
-  const { user } = useSelector((state: any) => state.auth);
   const { data } = useSession();
   const [socialAuth, { isSuccess }] = useSocialAuthMutation();
   const [active, setActive] = useState(false);
@@ -42,7 +41,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
     data: userData,
     isLoading,
     refetch,
-  } = useLoadUserQuery(undefined, {});
+  } = useLoadUserQuery(undefined, { refetchOnMountOrArgChange: true });
 
   useEffect(() => {
     if (!isLoading && !userData && data) {
@@ -62,12 +61,22 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
     }
   }, [data, userData, isLoading]);
 
-  if (typeof window !== "undefined") {
-    window.addEventListener("scroll", () => {
+  useEffect(() => {
+    // Add event listener when the component is mounted
+    const handleScroll = () => {
       if (window.scrollY > 80) setActive(true);
       else setActive(false);
-    });
-  }
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("scroll", handleScroll);
+    }
+
+    // Remove the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   // if clicked target is screen then setOpen sidebar false
   const handleClose = (e: any) => {
@@ -106,7 +115,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
                   onClick={() => setOpenSidebar(true)}
                 />
               </div>
-              {userData.user ? (
+              {userData?.user ? (
                 <Link href="/profile">
                   <Image
                     src={
@@ -184,6 +193,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
               setRoute={setRoute}
               activeItem={activeItem}
               component={Login}
+              refetch={refetch}
             />
           )}
         </>

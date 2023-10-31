@@ -14,10 +14,8 @@ const Page = (props: Props) => {
   const [activeItem, setActiveItem] = useState<number>(4);
   const [route, setRoute] = useState<string>("Login");
 
-  const { user } = useSelector((state: any) => state.auth);
-
   return (
-    <div className="min-h-screen" >
+    <div className="min-h-screen">
       <Heading
         title="FAQ || E-Learning"
         description="E-Learning is a learning management platform for programmers to boost up their skills"

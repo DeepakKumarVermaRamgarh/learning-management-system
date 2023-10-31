@@ -108,8 +108,6 @@ const CreateCourse: FC<Props> = () => {
       if ("data" in error) {
         const errorData = error as any;
         toast.error(errorData.data.message);
-      } else {
-        console.log(error);
       }
     }
   }, [error, isSuccess]);

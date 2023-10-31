@@ -7,7 +7,7 @@ const About = (props: Props) => {
   return (
     <div className="text-black dark:text-white">
       <h1 className={`${styles.title} 800px:!text-[45px] mb-2`}>
-        What is <span className="text-gradient">E-Learning ?</span>
+        What is <span className={styles.gradient}>E-Learning ?</span>
       </h1>
       <div className="w-[95%] 800px:w-[85%] m-auto">
         <p className="text-[18px] font-Poppins">

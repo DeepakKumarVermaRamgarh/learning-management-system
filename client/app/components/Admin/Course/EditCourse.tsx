@@ -58,7 +58,7 @@ const EditCourse: FC<Props> = ({ id }) => {
       if ("data" in error) {
         const errMsg = error as any;
         toast.error(errMsg.data.message);
-      } else console.log(error);
+      }
     }
   }, [data, error, isSuccess]);
 
@@ -152,20 +152,16 @@ const EditCourse: FC<Props> = ({ id }) => {
       if ("data" in error) {
         const errorData = error as any;
         toast.error(errorData.data.message);
-      } else {
-        console.log(error);
-      }
+      } 
     }
 
     if (editError) {
       if ("data" in editError) {
         const errorData = editError as any;
         toast.error(errorData.data.message);
-      } else {
-        console.log(error);
-      }
+      } 
     }
-  }, [editError, error, isSuccess, refetch]);
+  }, [editError, error, isSuccess]);
 
   if (isLoading || editLoading) {
     return <Loader />;

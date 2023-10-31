@@ -16,9 +16,9 @@ type Props = {
 };
 
 const ProfileInfo: FC<Props> = ({ avatar, user }) => {
-  const [name, setName] = useState(user && user.name);
+  const [name, setName] = useState<string>(user && user.name);
   const [updateAvatar, { isSuccess, error }] = useUpdateAvatarMutation();
-  const [loadUser, setLoadUser] = useState(false);
+  const [loadUser, setLoadUser] = useState<boolean>(false);
   const {} = useLoadUserQuery(undefined, { skip: loadUser ? false : true });
   const [editProfile, { isSuccess: nameUpdated, error: nameError }] =
     useEditProfileMutation();
@@ -36,7 +36,7 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    setName((prev) => prev.trim());
+    setName((prev: string) => prev.trim());
     if (name !== "" && name !== user.name) {
       await editProfile({ name });
     }
@@ -50,13 +50,15 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
     }
     if (error) {
       if ("data" in error) {
-        toast.error(error?.data?.message);
-      } else console.log(error);
+        const errMsg = error as any;
+        toast.error(errMsg?.data?.message);
+      } 
     }
     if (nameError) {
       if ("data" in nameError) {
-        toast.error(error?.data?.message);
-      } else console.log(error);
+        const errMsg = nameError as any;
+        toast.error(errMsg?.data?.message);
+      } 
     }
   }, [isSuccess, error, nameUpdated, nameError]);
 

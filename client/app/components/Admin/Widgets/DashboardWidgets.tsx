@@ -71,7 +71,7 @@ const DashboardWidgets = ({ open }: Props) => {
       });
     }
     if (!ordersLoading && ordersData) {
-      const lastTwoMonths = usersData.users.last12Months.slice(-2);
+      const lastTwoMonths = ordersData.orders.last12Months.slice(-2);
       const currentMonth = lastTwoMonths[1].count;
       const previousMonth = lastTwoMonths[0].count;
 
