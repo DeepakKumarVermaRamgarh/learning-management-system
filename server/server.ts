@@ -3,6 +3,9 @@ import { initSocketServer } from "./socketServer";
 import { connectDB } from "./utils/db";
 import cloudinary from "cloudinary";
 import http from "http";
+import cluster from "node:cluster";
+import process from "node:process";
+import os from "node:os";
 
 // cloudinary config
 cloudinary.v2.config({
@@ -11,30 +14,39 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// unhandled promise rejections
-process.on("unhandledRejection", (err: any) => {
-  console.log(`Error: ${err.message}`);
-  console.log(`Shutting down the server due to unhandled promise rejections`);
-  process.exit(1);
-});
+// connect to database
+connectDB();
 
-// http server
-const httpServer = http.createServer(app);
+const numsOfCpus = os.cpus().length;
 
-initSocketServer(httpServer);
-
-// initializing server
-const server = httpServer.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
-  // connect to database
-  connectDB();
-});
-
-// uncaught exception error
-process.on("uncaughtException", (err: any) => {
-  console.log(`Error: ${err.message}`);
-  console.log(`Shutting down the server due to uncaught exception error`);
-  server.close(() => {
+if (cluster.isPrimary) {
+  for (let i = 0; i < numsOfCpus; i++) {
+    cluster.fork();
+  }
+} else {
+  // unhandled promise rejections
+  process.on("unhandledRejection", (err: any) => {
+    console.log(`Error: ${err.message}`);
+    console.log(`Shutting down the server due to unhandled promise rejections`);
     process.exit(1);
   });
-});
+
+  // http server
+  const httpServer = http.createServer(app);
+
+  initSocketServer(httpServer);
+
+  // initializing server
+  const server = httpServer.listen(process.env.PORT, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
+  });
+
+  // uncaught exception error
+  process.on("uncaughtException", (err: any) => {
+    console.log(`Error: ${err.message}`);
+    console.log(`Shutting down the server due to uncaught exception error`);
+    server.close(() => {
+      process.exit(1);
+    });
+  });
+}
