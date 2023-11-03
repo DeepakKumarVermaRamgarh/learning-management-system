@@ -17,7 +17,7 @@ type Props = {
   isDashboard?: boolean;
 };
 
-const CourseAnalytics: FC<Props> = ({ isDashboard }) => {
+const OrderAnalytics: FC<Props> = ({ isDashboard }) => {
   const { data, isLoading } = useGetOrdersAnalyticsQuery({});
 
   const analyticsData: any[] = [];
@@ -46,7 +46,7 @@ const CourseAnalytics: FC<Props> = ({ isDashboard }) => {
                 isDashboard && "!text-[20px]"
               } px-5 !text-start`}
             >
-              Users Analytics
+              Orders Analytics
             </h1>
             {!isDashboard && (
               <p className={`${styles.label} px-5`}>
@@ -62,7 +62,7 @@ const CourseAnalytics: FC<Props> = ({ isDashboard }) => {
           >
             <ResponsiveContainer
               width={isDashboard ? "100%" : "90%"}
-              height={isDashboard ? "50%" : "100%"}
+              height={isDashboard ? "50%" : "80%"}
             >
               <LineChart
                 width={500}
@@ -90,4 +90,4 @@ const CourseAnalytics: FC<Props> = ({ isDashboard }) => {
   );
 };
 
-export default CourseAnalytics;
+export default OrderAnalytics;

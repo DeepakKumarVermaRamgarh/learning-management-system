@@ -17,10 +17,10 @@ type Props = {
 
 const CircularProgressWithLabel = ({ open, value }: Props) => {
   return (
-    <Box sx={{ position: "relate", display: "inline-flex" }}>
+    <Box sx={{ position: "relative", display: "inline-flex" }}>
       <CircularProgress
         variant="determinate"
-        value={value}
+        value={100}
         size={45}
         color={value && value > 99 ? "info" : "error"}
         thickness={4}
@@ -49,9 +49,9 @@ const DashboardWidgets = ({ open }: Props) => {
   const [usersComparePercentage, setUsersComparePercentage] = useState<any>({});
 
   const { data: usersData, isLoading: usersLoading } =
-    useGetUsersAnalyticsQuery({});
+    useGetUsersAnalyticsQuery(undefined, {});
   const { data: ordersData, isLoading: ordersLoading } =
-    useGetOrdersAnalyticsQuery({});
+    useGetOrdersAnalyticsQuery(undefined, {});
 
   useEffect(() => {
     if (!usersLoading && usersData) {
@@ -59,10 +59,12 @@ const DashboardWidgets = ({ open }: Props) => {
       const currentMonth = lastTwoMonths[1].count;
       const previousMonth = lastTwoMonths[0].count;
 
-      const percentageChange = (
-        (currentMonth - previousMonth * 100) /
-        (previousMonth !== 0 ? previousMonth : 1)
-      ).toFixed(0);
+      const percentageChange = parseInt(
+        (
+          ((currentMonth - previousMonth) * 100) /
+          (previousMonth !== 0 ? previousMonth : 1)
+        ).toFixed(0)
+      );
 
       setUsersComparePercentage({
         currentMonth,
@@ -75,10 +77,12 @@ const DashboardWidgets = ({ open }: Props) => {
       const currentMonth = lastTwoMonths[1].count;
       const previousMonth = lastTwoMonths[0].count;
 
-      const percentageChange = (
-        (currentMonth - previousMonth * 100) /
-        (previousMonth !== 0 ? previousMonth : 1)
-      ).toFixed(0);
+      const percentageChange = parseInt(
+        (
+          ((currentMonth - previousMonth) * 100) /
+          (previousMonth !== 0 ? previousMonth : 1)
+        ).toFixed(0)
+      );
 
       setOrdersComparePercentage({
         currentMonth,
@@ -94,7 +98,6 @@ const DashboardWidgets = ({ open }: Props) => {
         <div className="p-8">
           <UserAnalytics isDashboard={true} />
         </div>
-
         <div className="pt-[80px] pr-8">
           <div className="w-full dark:bg-[#111c43] rounded-sm shadow">
             <div className="flex items-center p-5 justify-between">
@@ -103,42 +106,58 @@ const DashboardWidgets = ({ open }: Props) => {
                 <h5 className="pt-2 font-Poppins dark:text-white text-black text-[20px]">
                   {ordersComparePercentage?.currentMonth}
                 </h5>
-                <h5 className="pt-2 font-Poppins dark:text-white text-black text-[20px] font-[400]">
+                <h5 className="py-2 font-Poppins dark:text-white text-black text-[20px] font-[400]">
                   Sales Obtained
                 </h5>
               </div>
+              <div>
+                <CircularProgressWithLabel
+                  value={
+                    parseInt(ordersComparePercentage?.percentageChange) > 0
+                      ? 100
+                      : 0
+                  }
+                  open={open}
+                />
+                <h5 className="text-center pt-4 text-white">
+                  {parseInt(ordersComparePercentage?.percentageChange) > 0
+                    ? "+"
+                    : ""}
+                  {ordersComparePercentage?.percentageChange} %
+                </h5>
+              </div>
             </div>
-            <CircularProgressWithLabel
-              value={ordersComparePercentage.percentChange > 0 ? 100 : 0}
-              open={open}
-            />
-            <h5 className="text-center pt-4">
-              {ordersComparePercentage?.percentChange > 0 ? "+" : ""}
-              {ordersComparePercentage?.percentChange}%
-            </h5>
           </div>
-        </div>
 
-        <div className="w-full dark:bg-[#111c43] rounded-sm shadow my-8 ">
-          <div className="flex items-center p-5 justify-between ">
-            <div>
-              <PiUsersFourLight className="dark:text-[#45cba0] text-black text-[30px]" />
-              <h5 className="py-2 font-Poppins dark:text-white text-black text-[20px]">
-                {usersComparePercentage?.currentMonth}
-              </h5>
-              <h5 className="py-2 font-Poppins dark:text-[#45cba0] text-black text-[20px] font-[400]">
-                New Users
-              </h5>
+          <div className="w-full dark:bg-[#111c43] rounded-sm shadow">
+            <div className="flex items-center p-5 justify-between">
+              <div>
+                <PiUsersFourLight className="dark:text-[#45cba0] text-black text-[30px]" />
+                <h5 className="py-2 font-Poppins dark:text-white text-black text-[20px]">
+                  {usersComparePercentage?.currentMonth}
+                </h5>
+                <h5 className="py-2 font-Poppins dark:text-white text-black text-[20px] font-[400]">
+                  New Users
+                </h5>
+              </div>
+              <div>
+                <CircularProgressWithLabel
+                  value={
+                    parseInt(usersComparePercentage.percentageChange) > 0
+                      ? 100
+                      : 0
+                  }
+                  open={open}
+                />
+                <h5 className="text-center pt-4 text-white">
+                  {parseInt(usersComparePercentage?.percentageChange) > 0
+                    ? "+"
+                    : ""}
+                  {usersComparePercentage?.percentageChange} %
+                </h5>
+              </div>
             </div>
           </div>
-          <CircularProgressWithLabel
-            value={usersComparePercentage.percentChange > 0 ? 100 : 0}
-            open={open}
-          />
-          <h5 className="text-center pt-4">
-            {usersComparePercentage?.percentChange > 0 ? "+" : ""}
-            {usersComparePercentage?.percentChange}%
-          </h5>
         </div>
       </div>
 

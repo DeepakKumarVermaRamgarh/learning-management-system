@@ -437,19 +437,27 @@ export const deleteCourse = catchAsyncErrors(
 
 // generate video url
 export const generateVideoUrl = catchAsyncErrors(
-  async (req: Request, res: Response, next: NextFunction) => {
+  (req: Request, res: Response, next: NextFunction) => {
     const { videoId } = req.body;
-    const { data } = await axios.post(
-      `https://dev.vdociper.com/api/videos/${videoId}/otp`,
-      { ttl: 300 },
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: `Apisecret ${process.env.VDOCIPHER_API_SECRET}`,
-        },
-      }
-    );
-    res.status(200).json({ data });
+
+    const options = {
+      method: "POST",
+      url: `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Apisecret ${process.env.VDOCIPHER_API_SECRET}`,
+      },
+      data: { ttl: 300 },
+    };
+
+    axios(options)
+      .then((response) => {
+        res.status(200).json({ data: response.data });
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(400).json({ success: false });
+      });
   }
 );

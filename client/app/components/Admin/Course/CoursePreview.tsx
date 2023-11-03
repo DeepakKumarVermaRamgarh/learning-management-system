@@ -84,15 +84,13 @@ const CoursePreview: FC<Props> = ({
           <h1 className="text-[25px] font-Poppins font-[600]">
             {courseData?.name}
           </h1>
-          <div className="flex items-center justify-between pt-3">
-            <div className="flex items-center mb-5">
-              <Ratings rating={0} />
-              <h5>0 Students</h5>
-            </div>
-            <h1 className="text-[25px] font-Poppins font-[600]">
-              What you will learn from thi course ?
-            </h1>
+          <div className="flex items-center justify-between mb-5">
+            <Ratings rating={0} />
+            <h5>0 Students</h5>
           </div>
+          <h1 className="text-[25px] font-Poppins font-[600]">
+            What you will learn from this course ?
+          </h1>
           {courseData?.benefits?.map((item: any, index: number) => (
             <div className="w-full flex 800px:items-center py-2" key={index}>
               <div className="w-[15px] mr-1">

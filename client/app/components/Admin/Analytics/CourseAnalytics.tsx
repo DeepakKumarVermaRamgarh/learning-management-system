@@ -15,7 +15,7 @@ import { useGetCoursesAnalyticsQuery } from "@/redux/features/analytics/analytic
 type Props = {};
 
 const CourseAnalytics: FC<Props> = () => {
-  const { data, isLoading } = useGetCoursesAnalyticsQuery({});
+  const { data, isLoading } = useGetCoursesAnalyticsQuery(undefined, {});
 
   const analyticsData: any[] = [];
 

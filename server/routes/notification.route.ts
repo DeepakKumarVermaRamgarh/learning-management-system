@@ -15,7 +15,7 @@ router.get(
   getNotifications
 );
 
-router.get(
+router.put(
   "/update-notification/:id",
   updateAccessToken,
   isAuthenticated,

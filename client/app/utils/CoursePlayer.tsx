@@ -5,11 +5,8 @@ type Props = {
   videoUrl: string;
   title: string;
 };
-
-const CoursePlayer: FC<Props> = ({
-  videoUrl = "461f8bce79ccae5f5d820abf57612f44",
-  title,
-}) => {
+// sample video url = 461f8bce79ccae5f5d820abf57612f44
+const CoursePlayer: FC<Props> = ({ videoUrl = "", title }) => {
   const [videoData, setVideoData] = useState({
     otp: "",
     playbackInfo: "",
@@ -18,19 +15,19 @@ const CoursePlayer: FC<Props> = ({
   useEffect(() => {
     const getVideoUrl = async () => {
       const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}getVdoCipherOTP`,
+        `${process.env.NEXT_PUBLIC_SERVER_URI}getVdoCipherOTP`,
         { videoId: videoUrl }
       );
       setVideoData(data);
     };
     getVideoUrl();
-  }, [videoUrl]);
+  }, []);
 
   return (
     <div className=" pt-[56.25%] relative overflow-hidden">
-      {videoData.otp && videoData.playbackInfo !== "" && (
+      {videoData && videoData?.otp && videoData?.playbackInfo !== "" && (
         <iframe
-          src={`https://player.vdocipher.com/v2/?otp=${videoData.otp}&playbackInfo=${videoData.playbackInfo}&player=${process.env.NEXT_PLAYER_ID}`}
+          src={`https://player.vdocipher.com/v2/?otp=${videoData?.otp}&playbackInfo=${videoData?.playbackInfo}`}
           className=" border-none w-full h-full absolute top-0 left-0 "
           allowFullScreen={true}
           allow="encrypted-media"

@@ -14,7 +14,7 @@ type Props = {};
 
 const CreateCourse: FC<Props> = () => {
   const [createCourse, { isSuccess, isLoading, error }] =
-    useCreateCourseMutation();
+    useCreateCourseMutation({});
 
   const [active, setActive] = useState(0);
   const [courseInfo, setCourseInfo] = useState({
@@ -92,8 +92,7 @@ const CreateCourse: FC<Props> = () => {
     setCourseData(data);
   };
 
-  const handleCourseCreate = async (e: any) => {
-    e.preventDefault();
+  const handleCourseCreate = async () => {
     const data = courseData;
     if (!isLoading) await createCourse(data);
   };

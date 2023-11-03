@@ -15,20 +15,20 @@ type Props = {
 
 const AllInvoices = ({ isDashboard }: Props) => {
   const { theme, setTheme } = useTheme();
-  const { data, isLoading } = useGetAllOrdersQuery({});
-  const { data: usersData } = useGetAllUsersQuery({});
-  const { data: coursesData } = useGetAllCoursesQuery({});
+  const { data, isLoading } = useGetAllOrdersQuery(undefined, {});
+  const { data: usersData } = useGetAllUsersQuery(undefined, {});
+  const { data: coursesData } = useGetAllCoursesQuery(undefined, {});
 
   const [orderData, setOrderData] = useState<any[]>([]);
 
   useEffect(() => {
     if (data) {
       const temp = data.orders.map((order: any) => {
-        const user = usersData?.user.find(
-          (user: any) => user.id === order.user_id
+        const user = usersData?.users.find(
+          (user: any) => user._id === order.userId
         );
         const course = coursesData?.courses.find(
-          (course: any) => course.id === order.course_id
+          (course: any) => course._id === order.courseId
         );
         return {
           ...order,

@@ -188,7 +188,7 @@ const CourseInformation: FC<Props> = ({
         <div className="w-full flex justify-between mb-5">
           <div className="w-[45%]">
             <label htmlFor="lavel" className={styles.label}>
-              Course Lavel
+              Course Level
             </label>
             <input
               type="text"
@@ -217,7 +217,7 @@ const CourseInformation: FC<Props> = ({
             />
           </div>
         </div>
-        <div className="w-full mb-5">
+        <div className="w-full mb-5 border">
           <input
             type="file"
             accept="image/*"

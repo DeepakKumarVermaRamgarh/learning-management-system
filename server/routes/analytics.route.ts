@@ -5,10 +5,10 @@ import {
   updateAccessToken,
 } from "../controllers/user.controller";
 import {
+  getCoursesAnalytics,
   getOrdersAnalytics,
   getUsersAnalytics,
 } from "../controllers/analytics.controller";
-import { getCourseByUser } from "../controllers/course.controller";
 const router = express.Router();
 
 router.get(
@@ -24,7 +24,7 @@ router.get(
   updateAccessToken,
   isAuthenticated,
   authorizeRole("admin"),
-  getCourseByUser
+  getCoursesAnalytics
 );
 
 router.get(

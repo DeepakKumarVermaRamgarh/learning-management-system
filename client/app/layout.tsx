@@ -9,13 +9,13 @@ import { SessionProvider } from "next-auth/react";
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 import Loader from "./components/Loader/Loader";
 import { useEffect } from "react";
-// import socketIO from "socket.io-client";
-// const socketId = socketIO(
-//   process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "http://localhost:3000",
-//   {
-//     transports: ["websocket"],
-//   }
-// );
+import socketIO from "socket.io-client";
+const socketId = socketIO(
+  process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "http://localhost:3000",
+  {
+    transports: ["websocket"],
+  }
+);
 
 const poppins = Poppins({
   subsets: ["latin"],
